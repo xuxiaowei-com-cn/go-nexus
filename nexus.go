@@ -21,7 +21,6 @@ import (
 
 const (
 	defaultBaseURL = "http://127.0.0.1:8081/"
-	apiPath        = "service/"
 	userAgent      = "go-nexus"
 )
 
@@ -100,10 +99,6 @@ func (c *Client) SetBaseURL(urlStr string) error {
 	baseURL, err := url.Parse(urlStr)
 	if err != nil {
 		return err
-	}
-
-	if !strings.HasSuffix(baseURL.Path, apiPath) {
-		baseURL.Path += apiPath
 	}
 
 	c.baseURL = baseURL

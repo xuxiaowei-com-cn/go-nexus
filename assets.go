@@ -38,7 +38,7 @@ type AssetXO struct {
 // ListAssets 列出资产
 func (s *AssetsService) ListAssets(requestQuery *ListAssetsRequest) (*PageAssetXO, *Response, error) {
 
-	u := "rest/v1/assets"
+	u := "service/rest/v1/assets"
 
 	req, err := s.client.NewRequest(http.MethodGet, u, requestQuery, nil)
 	if err != nil {

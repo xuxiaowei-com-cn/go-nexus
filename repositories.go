@@ -38,7 +38,7 @@ type RepositoryService struct {
 // ListRepository 列出存储库
 func (s *RepositoryService) ListRepository() ([]*RepositoryXO, *Response, error) {
 
-	u := "rest/v1/repositories"
+	u := "service/rest/v1/repositories"
 
 	req, err := s.client.NewRequest(http.MethodGet, u, nil, nil)
 	if err != nil {

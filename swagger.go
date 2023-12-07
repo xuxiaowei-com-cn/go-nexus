@@ -23,7 +23,7 @@ type SwaggerService struct {
 // 接口不需要凭证
 func (s *SwaggerService) GetSwagger() (*Swagger, *Response, error) {
 
-	u := "rest/swagger.json"
+	u := "service/rest/swagger.json"
 
 	req, err := s.client.NewRequest(http.MethodGet, u, nil, nil)
 	if err != nil {
