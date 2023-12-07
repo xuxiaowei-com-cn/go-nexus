@@ -4,33 +4,6 @@ import (
 	"net/http"
 )
 
-type RepositoryXO struct {
-	Name       string      `json:"name,omitempty"`
-	Format     string      `json:"format,omitempty"`
-	Type       string      `json:"type,omitempty"`
-	Url        string      `json:"url,omitempty"`
-	Attributes interface{} `json:"attributes,omitempty"`
-}
-
-type SimpleApiGroupRepository struct {
-	Name    string            `json:"name"`
-	Format  string            `json:"format"`
-	Url     string            `json:"url"`
-	Online  bool              `json:"online"`
-	Storage StorageAttributes `json:"storage"`
-	Group   GroupAttributes   `json:"group"`
-	Type    string            `json:"type"`
-}
-
-type StorageAttributes struct {
-	BlobStoreName               string `json:"blobStoreName"`
-	StrictContentTypeValidation bool   `json:"strictContentTypeValidation"`
-}
-
-type GroupAttributes struct {
-	MemberNames []string `json:"memberNames"`
-}
-
 type RepositoryService struct {
 	client *Client
 }
