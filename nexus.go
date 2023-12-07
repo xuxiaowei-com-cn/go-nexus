@@ -38,6 +38,7 @@ type Client struct {
 	Swagger    *SwaggerService
 	Repository *RepositoryService
 	Maven      *MavenService
+	Assets     *AssetsService
 }
 
 type ListOptions struct {
@@ -81,6 +82,7 @@ func newClient() (*Client, error) {
 	c.Swagger = &SwaggerService{client: c}
 	c.Repository = &RepositoryService{client: c}
 	c.Maven = &MavenService{client: c}
+	c.Assets = &AssetsService{client: c}
 
 	return c, nil
 }
