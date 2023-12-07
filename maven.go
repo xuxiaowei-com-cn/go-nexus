@@ -17,7 +17,7 @@ const (
 	MavenTypeHosted MavenTypeValue = "hosted"
 )
 
-// GetMavenRepository 列出存储库
+// GetMavenRepository 获取 Maven 存储库
 func (s *MavenService) GetMavenRepository(mavenTypeValue MavenTypeValue, repositoryName string) (*SimpleApiGroupRepository, *Response, error) {
 
 	u := fmt.Sprintf("v1/repositories/maven/%s/%s", mavenTypeValue, repositoryName)
