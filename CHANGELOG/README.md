@@ -25,7 +25,8 @@
 ## v0.1.0
 
 - ⭐ New Features | 新功能
-    - 新增 `ListRepository` 列出存储库
+    - 新增 `ListRepository`
+      [列出存储库](https://help.sonatype.com/repomanager3/integrations/rest-and-integration-api/repositories-api)
 
 ## v0.0.1
 
