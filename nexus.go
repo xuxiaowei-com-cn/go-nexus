@@ -35,7 +35,8 @@ type Client struct {
 
 	UserAgent string
 
-	Swagger *SwaggerService
+	Swagger    *SwaggerService
+	Repository *RepositoryService
 }
 
 type ListOptions struct {
@@ -77,6 +78,7 @@ func newClient() (*Client, error) {
 	}
 
 	c.Swagger = &SwaggerService{client: c}
+	c.Repository = &RepositoryService{client: c}
 
 	return c, nil
 }

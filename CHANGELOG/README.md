@@ -22,6 +22,11 @@
     - ❤ Contributors | 贡献者
     - ⚠️ Noteworthy Changes | 值得注意的变化
 
+## v0.1.0
+
+- ⭐ New Features | 新功能
+    - 新增 `ListRepository` 列出存储库
+
 ## v0.0.1
 
 - ⭐ New Features | 新功能
