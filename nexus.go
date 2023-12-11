@@ -120,7 +120,6 @@ func (c *Client) NewRequest(method string, path string, requestQuery interface{}
 	u.Path = c.baseURL.Path + unescaped
 
 	reqHeaders := make(http.Header)
-	reqHeaders.Set("Accept", "application/json")
 
 	if c.UserAgent != "" {
 		reqHeaders.Set("User-Agent", c.UserAgent)
@@ -215,6 +214,7 @@ func (c *Client) UploadRequest(method, path string, content io.Reader, filename 
 
 type Response struct {
 	*http.Response
+	body string
 }
 
 func newResponse(r *http.Response) *Response {
@@ -243,7 +243,19 @@ func (c *Client) Do(req *retryablehttp.Request, v interface{}) (*Response, error
 		if w, ok := v.(io.Writer); ok {
 			_, err = io.Copy(w, resp.Body)
 		} else {
-			err = json.NewDecoder(resp.Body).Decode(v)
+			contentType := resp.Header.Get("Content-Type")
+
+			if strings.Contains(contentType, "application/json") {
+				err = json.NewDecoder(resp.Body).Decode(v)
+			} else if strings.Contains(contentType, "text/html") {
+				bodyBytes, err := io.ReadAll(resp.Body)
+				if err != nil {
+					return response, err
+				}
+				response.body = string(bodyBytes)
+			} else {
+				err = fmt.Errorf("unknown response type: %s", contentType)
+			}
 		}
 	}
 
