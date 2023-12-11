@@ -38,6 +38,7 @@ type Client struct {
 	Repository *RepositoryService
 	Maven      *MavenService
 	Assets     *AssetsService
+	ExtDirect  *ExtDirectService
 }
 
 type ListOptions struct {
@@ -82,6 +83,7 @@ func newClient() (*Client, error) {
 	c.Repository = &RepositoryService{client: c}
 	c.Maven = &MavenService{client: c}
 	c.Assets = &AssetsService{client: c}
+	c.ExtDirect = &ExtDirectService{client: c}
 
 	return c, nil
 }

@@ -29,6 +29,7 @@
       [列出存储库](https://help.sonatype.com/repomanager3/integrations/rest-and-integration-api/repositories-api)
     - 新增 `GetMavenRepository` 获取 Maven 存储库
     - 新增 `ListAssets` 列出资产
+    - 新增 `PostExtDirect` 搜索
 
 ## v0.0.1
 
