@@ -23,19 +23,8 @@ func TestPostExtDirect(t *testing.T) {
 }
 
 func ExtDirectRecursion(t *testing.T, baseURL, username, password, repository string, node string, client *Client) {
-	requestBody := &PostExtDirectRequest{
-		Action: "coreui_Browse",
-		Method: "read",
-		Type:   "rpc",
-		Data: []PostExtDirectData{
-			{
-				RepositoryName: repository,
-				Node:           node,
-			},
-		},
-	}
 
-	extDirect, response, err := client.ExtDirect.PostExtDirect(requestBody)
+	extDirect, response, err := client.ExtDirect.PostExtDirectRead(repository, node)
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, response.StatusCode)
 
@@ -55,7 +44,13 @@ func ExtDirectRecursion(t *testing.T, baseURL, username, password, repository st
 
 		} else if "asset" == data.Type {
 
-			t.Logf("%s/repository/%s/%s", baseURL, repository, data.Id)
+			postExtDirectReadAsset, response, err := client.ExtDirect.PostExtDirectReadAsset(repository, data.AssetId)
+			assert.NoError(t, err)
+			assert.Equal(t, http.StatusOK, response.StatusCode)
+
+			assert.Equal(t, true, postExtDirectReadAsset.Result.Success)
+
+			t.Logf("%s/repository/%s/%s %d", baseURL, repository, data.Id, postExtDirectReadAsset.Result.Data.Size)
 
 		} else {
 			t.Fatalf("Unknown Type: %s", data.Type)
