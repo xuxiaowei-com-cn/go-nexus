@@ -30,4 +30,12 @@ func TestListAssets_maven_proxy(t *testing.T) {
 
 	t.Log("ContinuationToken:", pageAssetXO.ContinuationToken)
 	t.Log("Items Len:", len(pageAssetXO.Items))
+
+	item := pageAssetXO.Items[0]
+
+	assetXO, response, err := client.Assets.GetAssets(item.Id)
+	assert.NoError(t, err)
+	assert.Equal(t, http.StatusOK, response.StatusCode)
+	t.Log("DownloadUrl:", assetXO.DownloadUrl)
+
 }
