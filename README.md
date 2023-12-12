@@ -371,7 +371,7 @@ go test ./... -v
 | /v1/security/users/{userId}                                         | PUT    | Update an existing user.                                                                            |        |   |
 | /v1/security/users/{userId}                                         | DELETE | Delete a user.                                                                                      |        |   |
 | /v1/security/users/{userId}/change-password                         | PUT    | Change a user's password.                                                                           |        |   |
-| /v1/security/users                                                  | GET    | Retrieve a list of users. Note if the source is not 'default' the response is limited to 100 users. |        |   |
+| /v1/security/users                                                  | GET    | Retrieve a list of users. Note if the source is not 'default' the response is limited to 100 users. | ✅      |   |
 | /v1/security/users                                                  | POST   | Create a new user in the default source.                                                            |        |   |
 | /v1/security/ssl/truststore                                         | GET    | Retrieve a list of certificates added to the trust store.                                           |        |   |
 | /v1/security/ssl/truststore                                         | POST   | Add a certificate to the trust store.                                                               |        |   |

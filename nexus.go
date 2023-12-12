@@ -43,6 +43,7 @@ type Client struct {
 	Components *ComponentsService
 	BlobStores *BlobStoresService
 	Status     *StatusService
+	Users      *UsersService
 }
 
 type ListOptions struct {
@@ -91,6 +92,7 @@ func newClient() (*Client, error) {
 	c.Components = &ComponentsService{client: c}
 	c.BlobStores = &BlobStoresService{client: c}
 	c.Status = &StatusService{client: c}
+	c.Users = &UsersService{client: c}
 
 	return c, nil
 }
