@@ -3,6 +3,8 @@ package nexus
 import (
 	"github.com/stretchr/testify/assert"
 	"net/http"
+	"os"
+	"path/filepath"
 	"testing"
 )
 
@@ -12,13 +14,15 @@ func TestPostExtDirectRecursion_maven_proxy(t *testing.T) {
 	var username = Getenv("GO_NEXUS_USERNAME", "admin")
 	var password = Getenv("GO_NEXUS_PASSWORD", "password")
 	var repository = Getenv("GO_NEXUS_MAVEN_PROXY_REPOSITORY", "maven-central")
+	var tempDir = Getenv("GO_NEXUS_MAVEN_PROXY_REPOSITORY_TEMP_DIR", filepath.Join(os.TempDir(), "GO_NEXUS_MAVEN_PROXY_REPOSITORY", repository))
+	t.Log("tempDir", tempDir)
 
 	var node = "/"
 
 	client, err := NewClient(baseURL, username, password)
 	assert.NoError(t, err)
 
-	downloadMavenProxyRepository(t, client, repository)
+	downloadMavenProxyRepository(t, client, repository, tempDir)
 
 	ExtDirectRecursion(t, baseURL, username, password, repository, node, client)
 }

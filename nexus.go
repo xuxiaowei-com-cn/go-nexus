@@ -14,6 +14,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"path/filepath"
 	"sort"
 	"strings"
 	"time"
@@ -244,6 +245,7 @@ func newResponse(r *http.Response) *Response {
 	return response
 }
 
+// Do 发送请求，仅能处理 application/json、text/html 的响应
 func (c *Client) Do(req *retryablehttp.Request, v interface{}) (*Response, error) {
 
 	resp, err := c.client.Do(req)
@@ -275,17 +277,49 @@ func (c *Client) Do(req *retryablehttp.Request, v interface{}) (*Response, error
 					return response, err
 				}
 				response.body = string(bodyBytes)
-			} else if strings.Contains(contentType, "application/xml") ||
-				strings.Contains(contentType, "text/plain") ||
-				strings.Contains(contentType, "application/java-archive") ||
-				strings.Contains(contentType, "application/pgp-signature") {
-
-			} else if contentType == "" {
-
 			} else {
 				err = fmt.Errorf("unknown response type: %s", contentType)
 			}
 		}
+	}
+
+	return response, err
+}
+
+// DoDownload 下载
+func (c *Client) DoDownload(req *retryablehttp.Request, destination string) (*Response, error) {
+
+	resp, err := c.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	defer resp.Body.Close()
+	defer io.Copy(io.Discard, resp.Body)
+
+	response := newResponse(resp)
+
+	err = CheckResponse(resp)
+	if err != nil {
+		return response, err
+	}
+
+	dir := filepath.Dir(destination)
+
+	err = os.MkdirAll(dir, os.ModePerm)
+	if err != nil {
+		return response, err
+	}
+
+	file, err := os.Create(destination)
+	if err != nil {
+		return response, err
+	}
+	defer file.Close()
+
+	_, err = io.Copy(file, resp.Body)
+	if err != nil {
+		return response, err
 	}
 
 	return response, err

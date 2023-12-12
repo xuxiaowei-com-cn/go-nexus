@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"github.com/stretchr/testify/assert"
 	"net/http"
+	"path/filepath"
 	"testing"
 )
 
 // 下载 Maven 代理仓库 测试数据
-func downloadMavenProxyRepository(t *testing.T, client *Client, repository string) {
+func downloadMavenProxyRepository(t *testing.T, client *Client, repository string, tempDir string) {
 
 	metadataSuffixList := []string{"", ".md5", ".sha1", ".sha256", ".sha512"}
 	for _, suffix := range metadataSuffixList {
@@ -17,7 +18,7 @@ func downloadMavenProxyRepository(t *testing.T, client *Client, repository strin
 		if err != nil {
 			assert.NoError(t, err)
 		}
-		_, err = client.Do(req, "")
+		_, err = client.DoDownload(req, filepath.Join(tempDir, u))
 		if err != nil {
 			assert.NoError(t, err)
 		}
@@ -28,7 +29,7 @@ func downloadMavenProxyRepository(t *testing.T, client *Client, repository strin
 		if err != nil {
 			assert.NoError(t, err)
 		}
-		_, err = client.Do(req, "")
+		_, err = client.DoDownload(req, filepath.Join(tempDir, u))
 		if err != nil {
 			assert.NoError(t, err)
 		}
@@ -45,7 +46,7 @@ func downloadMavenProxyRepository(t *testing.T, client *Client, repository strin
 			if err != nil {
 				assert.NoError(t, err)
 			}
-			_, err = client.Do(req, "")
+			_, err = client.DoDownload(req, filepath.Join(tempDir, u))
 			if err != nil {
 				assert.NoError(t, err)
 			}
