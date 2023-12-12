@@ -79,10 +79,10 @@ func TestGetMavenRepository_maven_proxy(t *testing.T) {
 	client, err := NewClient(baseURL, username, password)
 	assert.NoError(t, err)
 
-	groupRepository, response, err := client.Maven.GetMavenRepository(MavenTypeProxy, repository)
+	proxyRepository, response, err := client.Maven.GetMavenRepository(MavenTypeProxy, repository)
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, response.StatusCode)
-	t.Log(groupRepository.Url)
+	t.Log(proxyRepository.Url)
 }
 
 func TestGetMavenRepository_maven_hosted_snapshots(t *testing.T) {
@@ -95,10 +95,10 @@ func TestGetMavenRepository_maven_hosted_snapshots(t *testing.T) {
 	client, err := NewClient(baseURL, username, password)
 	assert.NoError(t, err)
 
-	groupRepository, response, err := client.Maven.GetMavenRepository(MavenTypeHosted, repository)
+	hostedRepository, response, err := client.Maven.GetMavenRepository(MavenTypeHosted, repository)
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, response.StatusCode)
-	t.Log(groupRepository.Url)
+	t.Log(hostedRepository.Url)
 }
 
 func TestGetMavenRepository_maven_hosted_releases(t *testing.T) {
@@ -111,8 +111,8 @@ func TestGetMavenRepository_maven_hosted_releases(t *testing.T) {
 	client, err := NewClient(baseURL, username, password)
 	assert.NoError(t, err)
 
-	groupRepository, response, err := client.Maven.GetMavenRepository(MavenTypeHosted, repository)
+	hostedRepository, response, err := client.Maven.GetMavenRepository(MavenTypeHosted, repository)
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, response.StatusCode)
-	t.Log(groupRepository.Url)
+	t.Log(hostedRepository.Url)
 }
