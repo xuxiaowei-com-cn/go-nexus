@@ -18,6 +18,8 @@ func TestPostExtDirectRecursion_maven_proxy(t *testing.T) {
 	client, err := NewClient(baseURL, username, password)
 	assert.NoError(t, err)
 
+	downloadMavenProxyRepository(t, client, repository)
+
 	ExtDirectRecursion(t, baseURL, username, password, repository, node, client)
 }
 
@@ -28,9 +30,7 @@ func ExtDirectRecursion(t *testing.T, baseURL, username, password, repository st
 	assert.Equal(t, http.StatusOK, response.StatusCode)
 
 	assert.Equal(t, true, extDirect.Result.Success)
-	//assert.NotEqual(t, 0, len(extDirect.Result.Data))
-
-	//t.Logf("%s %s ExtDirect Result Len: %d", repository, node, len(extDirect.Result.Data))
+	assert.NotEqual(t, 0, len(extDirect.Result.Data))
 
 	for _, data := range extDirect.Result.Data {
 		if "folder" == data.Type {
