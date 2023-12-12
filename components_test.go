@@ -22,11 +22,11 @@ func TestListComponents_GetComponents_DeleteComponents_maven_proxy(t *testing.T)
 
 	downloadMavenProxyRepository(t, client, repository, tempDir)
 
-	request := &ListComponentsQuery{
+	requestQuery := &ListComponentsQuery{
 		Repository: repository,
 	}
 
-	pageComponentXO, response, err := client.Components.ListComponents(request)
+	pageComponentXO, response, err := client.Components.ListComponents(requestQuery)
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, response.StatusCode)
 
@@ -63,15 +63,15 @@ func TestListComponentsRecursion_maven_proxy(t *testing.T) {
 }
 
 func ListComponentsRecursion(t *testing.T, repository string, continuationToken string, client *Client) {
-	request := &ListComponentsQuery{
+	requestQuery := &ListComponentsQuery{
 		Repository: repository,
 	}
 
 	if continuationToken != "" {
-		request.ContinuationToken = continuationToken
+		requestQuery.ContinuationToken = continuationToken
 	}
 
-	pageComponentXO, response, err := client.Components.ListComponents(request)
+	pageComponentXO, response, err := client.Components.ListComponents(requestQuery)
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, response.StatusCode)
 
