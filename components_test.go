@@ -21,7 +21,7 @@ func TestListComponents(t *testing.T) {
 }
 
 func ListComponentsRecursion(t *testing.T, repository string, continuationToken string, client *Client) {
-	request := &ListComponentsRequest{
+	request := &ListComponentsQuery{
 		Repository: repository,
 	}
 

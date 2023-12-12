@@ -8,13 +8,13 @@ type AssetsService struct {
 	client *Client
 }
 
-type ListAssetsRequest struct {
+type ListAssetsQuery struct {
 	Repository        string `json:"repository,omitempty" url:"repository,omitempty"`
 	ContinuationToken string `json:"continuationToken,omitempty" url:"continuationToken,omitempty"`
 }
 
 // ListAssets 列出资产
-func (s *AssetsService) ListAssets(requestQuery *ListAssetsRequest) (*PageAssetXO, *Response, error) {
+func (s *AssetsService) ListAssets(requestQuery *ListAssetsQuery) (*PageAssetXO, *Response, error) {
 
 	u := "service/rest/v1/assets"
 

@@ -9,13 +9,13 @@ type ComponentsService struct {
 	client *Client
 }
 
-type ListComponentsRequest struct {
+type ListComponentsQuery struct {
 	Repository        string `json:"repository,omitempty" url:"repository,omitempty"`
 	ContinuationToken string `json:"continuationToken,omitempty" url:"continuationToken,omitempty"`
 }
 
 // ListComponents 列出组件
-func (s *ComponentsService) ListComponents(requestQuery *ListComponentsRequest) (*PageComponentXO, *Response, error) {
+func (s *ComponentsService) ListComponents(requestQuery *ListComponentsQuery) (*PageComponentXO, *Response, error) {
 
 	u := "service/rest/v1/components"
 

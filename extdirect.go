@@ -10,7 +10,7 @@ type ExtDirectService struct {
 	client *Client
 }
 
-type PostExtDirectReadRequest struct {
+type PostExtDirectReadBody struct {
 	Action string                  `json:"action,omitempty"`
 	Method string                  `json:"method,omitempty"`
 	Data   []PostExtDirectReadData `json:"data,omitempty"`
@@ -51,7 +51,7 @@ func (s *ExtDirectService) PostExtDirectRead(repository string, node string) (*P
 
 	u := "service/extdirect"
 
-	requestBody := &PostExtDirectReadRequest{
+	requestBody := &PostExtDirectReadBody{
 		Action: "coreui_Browse",
 		Method: "read",
 		Type:   "rpc",
@@ -78,7 +78,7 @@ func (s *ExtDirectService) PostExtDirectRead(repository string, node string) (*P
 	return postExtDirectRead, resp, nil
 }
 
-type PostExtDirectReadAssetRequest struct {
+type PostExtDirectReadAssetBody struct {
 	Action string   `json:"action"`
 	Method string   `json:"method"`
 	Data   []string `json:"data"`
@@ -159,7 +159,7 @@ func (s *ExtDirectService) PostExtDirectReadAsset(repository string, assetId str
 
 	u := "service/extdirect"
 
-	requestBody := &PostExtDirectReadAssetRequest{
+	requestBody := &PostExtDirectReadAssetBody{
 		Action: "coreui_Component",
 		Method: "readAsset",
 		Type:   "rpc",

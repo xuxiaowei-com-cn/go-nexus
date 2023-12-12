@@ -23,7 +23,7 @@ func TestListAssets(t *testing.T) {
 	client, err := NewClient(baseURL, username, password)
 	assert.NoError(t, err)
 
-	requestQuery := &ListAssetsRequest{
+	requestQuery := &ListAssetsQuery{
 		Repository: repository,
 	}
 
