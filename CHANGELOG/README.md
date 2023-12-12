@@ -28,14 +28,15 @@
     - 新增 `ListAssets` 列出资产
     - 新增 `GetAssets` 获取资产详细信息
     - 新增 `DeleteAssets` 删除资产
+    - 新增 `GetComponents` 获取组件详细信息
+    - 新增 `ListComponents` 列出组件
+    - 新增 `DeleteComponents` 删除组件
     - 新增 `ListRepository`
       [列出存储库](https://help.sonatype.com/repomanager3/integrations/rest-and-integration-api/repositories-api)
     - 新增 `GetMavenRepository` 获取 Maven 存储库
     - 新增 `PostExtDirectRead` 搜索资产
     - 新增 `PostExtDirectReadAsset` 查看资产详细信息
     - 新增 `GetBrowseRepository` 浏览仓库
-    - 新增 `ListComponents` 列出组件
-    - 新增 `GetComponents` 获取组件详细信息
 
 ## v0.0.1
 

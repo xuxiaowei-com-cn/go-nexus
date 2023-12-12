@@ -6,7 +6,42 @@ import (
 	"testing"
 )
 
-func TestListComponents(t *testing.T) {
+func TestListComponents_GetComponents_DeleteComponents_maven_proxy(t *testing.T) {
+
+	var baseURL = Getenv("GO_NEXUS_BASE_URL", "http://127.0.0.1:8081/")
+	var username = Getenv("GO_NEXUS_USERNAME", "admin")
+	var password = Getenv("GO_NEXUS_PASSWORD", "password")
+	var repository = Getenv("GO_NEXUS_MAVEN_PROXY_REPOSITORY", "maven-central")
+
+	client, err := NewClient(baseURL, username, password)
+	assert.NoError(t, err)
+
+	downloadMavenProxyRepository(t, client, repository)
+
+	request := &ListComponentsQuery{
+		Repository: repository,
+	}
+
+	pageComponentXO, response, err := client.Components.ListComponents(request)
+	assert.NoError(t, err)
+	assert.Equal(t, http.StatusOK, response.StatusCode)
+
+	assert.NotEqual(t, 0, len(pageComponentXO.Items))
+
+	item := pageComponentXO.Items[0]
+
+	componentXO, response, err := client.Components.GetComponents(item.Id)
+	assert.NoError(t, err)
+	assert.Equal(t, http.StatusOK, response.StatusCode)
+	t.Log("DownloadUrl:", componentXO.Id)
+
+	response, err = client.Components.DeleteComponents(item.Id)
+	assert.NoError(t, err)
+	assert.Equal(t, http.StatusNoContent, response.StatusCode)
+
+}
+
+func TestListComponentsRecursion_maven_proxy(t *testing.T) {
 
 	var baseURL = Getenv("GO_NEXUS_BASE_URL", "http://127.0.0.1:8081/")
 	var username = Getenv("GO_NEXUS_USERNAME", "admin")
