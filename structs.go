@@ -651,11 +651,14 @@ type MavenGroupRepositoryApiRequest struct {
 
 type MavenHostedApiRepository struct {
 	Maven     MavenAttributes         `json:"maven,omitempty" url:"maven,omitempty"`         //	description: , example: , pattern:
+	Url       string                  `json:"url,omitempty" url:"url,omitempty"`             // 补充 swagger.json 不存在的字段
 	Name      string                  `json:"name,omitempty" url:"name,omitempty"`           //	description: A unique identifier for this repository, example: internal, pattern: ^[a-zA-Z0-9\-]{1}[a-zA-Z0-9_\-\.]*$
 	Online    bool                    `json:"online,omitempty" url:"online,omitempty"`       //	description: Whether this repository accepts incoming requests, example: true, pattern:
 	Storage   HostedStorageAttributes `json:"storage,omitempty" url:"storage,omitempty"`     //	description: , example: , pattern:
 	Cleanup   CleanupPolicyAttributes `json:"cleanup,omitempty" url:"cleanup,omitempty"`     //	description: , example: , pattern:
 	Component ComponentAttributes     `json:"component,omitempty" url:"component,omitempty"` //	description: , example: , pattern:
+	Format    string                  `json:"format,omitempty" url:"format,omitempty"`       // 补充 swagger.json 不存在的字段
+	Type      string                  `json:"type,omitempty" url:"type,omitempty"`           // 补充 swagger.json 不存在的字段
 }
 
 type MavenHostedRepositoryApiRequest struct {
@@ -669,6 +672,7 @@ type MavenHostedRepositoryApiRequest struct {
 
 type MavenProxyApiRepository struct {
 	Name            string                  `json:"name,omitempty" url:"name,omitempty"`                       //	description: A unique identifier for this repository, example: internal, pattern: ^[a-zA-Z0-9\-]{1}[a-zA-Z0-9_\-\.]*$
+	Url             string                  `json:"url,omitempty" url:"url,omitempty"`                         // 补充 swagger.json 不存在的字段
 	NegativeCache   NegativeCacheAttributes `json:"negativeCache,omitempty" url:"negativeCache,omitempty"`     //	description: , example: , pattern:
 	RoutingRuleName string                  `json:"routingRuleName,omitempty" url:"routingRuleName,omitempty"` //	description: The name of the routing rule assigned to this repository, example: , pattern:
 	Maven           MavenAttributes         `json:"maven,omitempty" url:"maven,omitempty"`                     //	description: , example: , pattern:
@@ -678,6 +682,8 @@ type MavenProxyApiRepository struct {
 	Replication     ReplicationAttributes   `json:"replication,omitempty" url:"replication,omitempty"`         //	description: , example: , pattern:
 	Storage         StorageAttributes       `json:"storage,omitempty" url:"storage,omitempty"`                 //	description: , example: , pattern:
 	Cleanup         CleanupPolicyAttributes `json:"cleanup,omitempty" url:"cleanup,omitempty"`                 //	description: , example: , pattern:
+	Format          string                  `json:"format,omitempty" url:"format,omitempty"`                   // 补充 swagger.json 不存在的字段
+	Type            string                  `json:"type,omitempty" url:"type,omitempty"`                       // 补充 swagger.json 不存在的字段
 }
 
 type MavenProxyRepositoryApiRequest struct {

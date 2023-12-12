@@ -54,7 +54,7 @@ func downloadMavenProxyRepository(t *testing.T, client *Client, repository strin
 	}
 }
 
-func TestGetMavenRepository_maven_group(t *testing.T) {
+func TestGetMavenGroupRepository(t *testing.T) {
 
 	var baseURL = Getenv("GO_NEXUS_BASE_URL", "http://127.0.0.1:8081/")
 	var username = Getenv("GO_NEXUS_USERNAME", "admin")
@@ -64,13 +64,13 @@ func TestGetMavenRepository_maven_group(t *testing.T) {
 	client, err := NewClient(baseURL, username, password)
 	assert.NoError(t, err)
 
-	groupRepository, response, err := client.Maven.GetMavenRepository(MavenTypeGroup, repository)
+	simpleApiGroupRepository, response, err := client.Maven.GetMavenGroupRepository(repository)
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, response.StatusCode)
-	t.Log(groupRepository.Url)
+	t.Log(simpleApiGroupRepository.Url)
 }
 
-func TestGetMavenRepository_maven_proxy(t *testing.T) {
+func TestGetMavenProxyRepository(t *testing.T) {
 
 	var baseURL = Getenv("GO_NEXUS_BASE_URL", "http://127.0.0.1:8081/")
 	var username = Getenv("GO_NEXUS_USERNAME", "admin")
@@ -80,13 +80,13 @@ func TestGetMavenRepository_maven_proxy(t *testing.T) {
 	client, err := NewClient(baseURL, username, password)
 	assert.NoError(t, err)
 
-	proxyRepository, response, err := client.Maven.GetMavenRepository(MavenTypeProxy, repository)
+	mavenProxyApiRepository, response, err := client.Maven.GetMavenProxyRepository(repository)
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, response.StatusCode)
-	t.Log(proxyRepository.Url)
+	t.Log(mavenProxyApiRepository.Url)
 }
 
-func TestGetMavenRepository_maven_hosted_snapshots(t *testing.T) {
+func TestGetMavenHostedRepository_snapshots(t *testing.T) {
 
 	var baseURL = Getenv("GO_NEXUS_BASE_URL", "http://127.0.0.1:8081/")
 	var username = Getenv("GO_NEXUS_USERNAME", "admin")
@@ -96,13 +96,13 @@ func TestGetMavenRepository_maven_hosted_snapshots(t *testing.T) {
 	client, err := NewClient(baseURL, username, password)
 	assert.NoError(t, err)
 
-	hostedRepository, response, err := client.Maven.GetMavenRepository(MavenTypeHosted, repository)
+	mavenHostedApiRepository, response, err := client.Maven.GetMavenHostedRepository(repository)
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, response.StatusCode)
-	t.Log(hostedRepository.Url)
+	t.Log(mavenHostedApiRepository.Url)
 }
 
-func TestGetMavenRepository_maven_hosted_releases(t *testing.T) {
+func TestGetMavenHostedRepository_releases(t *testing.T) {
 
 	var baseURL = Getenv("GO_NEXUS_BASE_URL", "http://127.0.0.1:8081/")
 	var username = Getenv("GO_NEXUS_USERNAME", "admin")
@@ -112,8 +112,8 @@ func TestGetMavenRepository_maven_hosted_releases(t *testing.T) {
 	client, err := NewClient(baseURL, username, password)
 	assert.NoError(t, err)
 
-	hostedRepository, response, err := client.Maven.GetMavenRepository(MavenTypeHosted, repository)
+	mavenHostedApiRepository, response, err := client.Maven.GetMavenHostedRepository(repository)
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, response.StatusCode)
-	t.Log(hostedRepository.Url)
+	t.Log(mavenHostedApiRepository.Url)
 }

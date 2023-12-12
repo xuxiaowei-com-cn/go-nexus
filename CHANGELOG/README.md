@@ -34,7 +34,9 @@
     - 新增 `DeleteComponents` 删除组件
     - 新增 `ListRepository`
       [列出存储库](https://help.sonatype.com/repomanager3/integrations/rest-and-integration-api/repositories-api)
-    - 新增 `GetMavenRepository` 获取 Maven（group、hosted、proxy）存储库
+    - 新增 `GetMavenGroupRepository` 获取 Maven 分组 存储库
+    - 新增 `GetMavenHostedRepository` 获取 Maven 宿主 存储库
+    - 新增 `GetMavenProxyRepository` 获取 Maven 代理 存储库
     - 新增 `ListUsers` 检索用户列表。请注意，如果 `source` 不是 `default`，则响应限制为100个用户。
     - 新增 `GetStatusCheck` 返回系统状态检查结果的运行状况检查终结点
     - 新增 `GetStatus` 验证服务器是否可以响应读取请求的运行状况检查终结点
