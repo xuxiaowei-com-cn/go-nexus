@@ -42,6 +42,7 @@ type Client struct {
 	ExtDirect  *ExtDirectService
 	Components *ComponentsService
 	BlobStores *BlobStoresService
+	Status     *StatusService
 }
 
 type ListOptions struct {
@@ -89,6 +90,7 @@ func newClient() (*Client, error) {
 	c.ExtDirect = &ExtDirectService{client: c}
 	c.Components = &ComponentsService{client: c}
 	c.BlobStores = &BlobStoresService{client: c}
+	c.Status = &StatusService{client: c}
 
 	return c, nil
 }

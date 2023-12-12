@@ -35,6 +35,7 @@
     - 新增 `ListRepository`
       [列出存储库](https://help.sonatype.com/repomanager3/integrations/rest-and-integration-api/repositories-api)
     - 新增 `GetMavenRepository` 获取 Maven（group、hosted、proxy）存储库
+    - 新增 `GetStatus` 验证服务器是否可以响应读取请求的运行状况检查终结点
     - 新增 `PostExtDirectRead` 搜索资产
     - 新增 `PostExtDirectReadAsset` 查看资产详细信息
     - 新增 `GetBrowseRepository` 浏览仓库
