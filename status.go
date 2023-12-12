@@ -60,3 +60,21 @@ func (s *StatusService) GetStatus(options ...RequestOptionFunc) (*Response, erro
 
 	return resp, nil
 }
+
+// GetStatusWritable 验证服务器是否可以响应读写请求的运行状况检查终结点
+func (s *StatusService) GetStatusWritable(options ...RequestOptionFunc) (*Response, error) {
+
+	u := "service/rest/v1/status/writable"
+
+	req, err := s.client.NewRequest(http.MethodGet, u, nil, nil, options)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := s.client.Do(req, nil)
+	if err != nil {
+		return resp, err
+	}
+
+	return resp, nil
+}
