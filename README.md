@@ -377,7 +377,7 @@ go test ./... -v
 | /v1/security/ssl/truststore                                         | POST   | Add a certificate to the trust store.                                                               |        |   |
 | /v1/security/ssl/truststore/{id}                                    | DELETE | Remove a certificate in the trust store.                                                            |        |   |
 | /v1/security/ssl                                                    | GET    | Helper method to retrieve certificate details from a remote system.                                 |        |   |
-| /v1/status/check                                                    | GET    | Health check endpoint that returns the results of the system status checks                          |        |   |
+| /v1/status/check                                                    | GET    | Health check endpoint that returns the results of the system status checks                          | ✅      |   |
 | /v1/status                                                          | GET    | Health check endpoint that validates server can respond to read requests                            | ✅      |   |
 | /v1/status/writable                                                 | GET    | Health check endpoint that validates server can respond to read and write requests                  |        |   |
 | /v1/support/supportzip                                              | POST   | Creates and downloads a support zip                                                                 |        |   |
