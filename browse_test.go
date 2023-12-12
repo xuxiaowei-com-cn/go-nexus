@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestGetBrowseRepository(t *testing.T) {
+func TestGetBrowseRepositoryRecursion_maven_proxy(t *testing.T) {
 
 	var baseURL = Getenv("GO_NEXUS_BASE_URL", "http://127.0.0.1:8081/")
 	var username = Getenv("GO_NEXUS_USERNAME", "admin")
