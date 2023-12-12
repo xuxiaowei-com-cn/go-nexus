@@ -33,11 +33,15 @@ func ListComponentsRecursion(t *testing.T, repository string, continuationToken 
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, response.StatusCode)
 
-	t.Log("ContinuationToken:", pageComponentXO.ContinuationToken)
-	t.Log("Items Len:", len(pageComponentXO.Items))
+	// t.Log("ContinuationToken:", pageComponentXO.ContinuationToken)
+	// t.Log("Items Len:", len(pageComponentXO.Items))
 
 	for _, item := range pageComponentXO.Items {
 		t.Logf("%s %s:%s:%s", item.Repository, item.Group, item.Name, item.Version)
+
+		_, response, err = client.Components.GetComponents(item.Id)
+		assert.NoError(t, err)
+		assert.Equal(t, http.StatusOK, response.StatusCode)
 
 		for _, asset := range item.Assets {
 			t.Logf("%s %d", asset.DownloadUrl, asset.FileSize)
