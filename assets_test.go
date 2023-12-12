@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestListAssets_maven_proxy(t *testing.T) {
+func TestListAssets_GetAssets_DeleteAssets_maven_proxy(t *testing.T) {
 
 	var baseURL = Getenv("GO_NEXUS_BASE_URL", "http://127.0.0.1:8081/")
 	var username = Getenv("GO_NEXUS_USERNAME", "admin")
@@ -38,4 +38,7 @@ func TestListAssets_maven_proxy(t *testing.T) {
 	assert.Equal(t, http.StatusOK, response.StatusCode)
 	t.Log("DownloadUrl:", assetXO.DownloadUrl)
 
+	response, err = client.Assets.DeleteAssets(item.Id)
+	assert.NoError(t, err)
+	assert.Equal(t, http.StatusNoContent, response.StatusCode)
 }

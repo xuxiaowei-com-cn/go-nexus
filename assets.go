@@ -33,6 +33,24 @@ func (s *AssetsService) GetAssets(id string) (*AssetXO, *Response, error) {
 	return assetXO, resp, nil
 }
 
+// DeleteAssets 删除资产
+func (s *AssetsService) DeleteAssets(id string) (*Response, error) {
+
+	u := fmt.Sprintf("service/rest/v1/assets/%s", id)
+
+	req, err := s.client.NewRequest(http.MethodDelete, u, nil, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := s.client.Do(req, "")
+	if err != nil {
+		return resp, err
+	}
+
+	return resp, nil
+}
+
 // ListAssets 列出资产
 func (s *AssetsService) ListAssets(requestQuery *ListAssetsQuery) (*PageAssetXO, *Response, error) {
 

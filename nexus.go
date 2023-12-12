@@ -260,6 +260,8 @@ func (c *Client) Do(req *retryablehttp.Request, v interface{}) (*Response, error
 				strings.Contains(contentType, "application/java-archive") ||
 				strings.Contains(contentType, "application/pgp-signature") {
 
+			} else if contentType == "" {
+
 			} else {
 				err = fmt.Errorf("unknown response type: %s", contentType)
 			}

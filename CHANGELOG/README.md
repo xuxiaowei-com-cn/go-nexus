@@ -27,6 +27,7 @@
 - ⭐ New Features | 新功能
     - 新增 `ListAssets` 列出资产
     - 新增 `GetAssets` 获取资产详细信息
+    - 新增 `DeleteAssets` 删除资产
     - 新增 `ListRepository`
       [列出存储库](https://help.sonatype.com/repomanager3/integrations/rest-and-integration-api/repositories-api)
     - 新增 `GetMavenRepository` 获取 Maven 存储库
