@@ -3,16 +3,15 @@ package nexus
 import (
 	"github.com/stretchr/testify/assert"
 	"net/http"
-	"os"
 	"testing"
 )
 
 func TestPostExtDirect(t *testing.T) {
 
-	var baseURL = os.Getenv("GO_NEXUS_BASE_URL")
-	var username = os.Getenv("GO_NEXUS_USERNAME")
-	var password = os.Getenv("GO_NEXUS_PASSWORD")
-	var repository = os.Getenv("GO_NEXUS_EXT_DIRECT_REPOSITORY")
+	var baseURL = Getenv("GO_NEXUS_BASE_URL", "http://127.0.0.1:8081/")
+	var username = Getenv("GO_NEXUS_USERNAME", "admin")
+	var password = Getenv("GO_NEXUS_PASSWORD", "password")
+	var repository = Getenv("GO_NEXUS_MAVEN_PROXY_REPOSITORY", "maven-central")
 
 	var node = "/"
 
