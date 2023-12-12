@@ -12,11 +12,12 @@ func TestGetMavenRepositoryGroup(t *testing.T) {
 	var baseURL = os.Getenv("GO_NEXUS_BASE_URL")
 	var username = os.Getenv("GO_NEXUS_USERNAME")
 	var password = os.Getenv("GO_NEXUS_PASSWORD")
+	var repository = os.Getenv("GO_NEXUS_MAVEN_REPOSITORY")
 
 	client, err := NewClient(baseURL, username, password)
 	assert.NoError(t, err)
 
-	groupRepository, response, err := client.Maven.GetMavenRepository(MavenTypeGroup, "maven-public")
+	groupRepository, response, err := client.Maven.GetMavenRepository(MavenTypeGroup, repository)
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, response.StatusCode)
 	t.Log(groupRepository.Url)
