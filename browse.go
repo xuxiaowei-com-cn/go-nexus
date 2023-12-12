@@ -50,15 +50,16 @@ func (s *ExtDirectService) GetBrowseRepository(repository string, path string, o
 			browseRepository := BrowseRepository{
 				Href: href,
 				Text: text,
-				Path: path + href,
 			}
 
 			if browseRepository.Href[len(browseRepository.Href)-1] == '/' {
 				browseRepository.Url = repositoryUrl + browseRepository.Href
 				browseRepository.Type = "folder"
+				browseRepository.Path = path + href
 			} else {
 				browseRepository.Url = browseRepository.Href
 				browseRepository.Type = "file"
+				browseRepository.Path = path + text
 			}
 
 			browseRepositories = append(browseRepositories, browseRepository)
