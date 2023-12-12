@@ -25,6 +25,7 @@ func (s *ExtDirectService) GetBrowseRepository(repository string, path string, o
 		return nil, nil, err
 	}
 
+	// 注意：此处响应的是 html 页面，第二个参数不能为 nil，否则将无结果
 	resp, err := s.client.Do(req, "")
 	if err != nil {
 		return nil, resp, err
