@@ -41,6 +41,7 @@ type Client struct {
 	Assets     *AssetsService
 	ExtDirect  *ExtDirectService
 	Components *ComponentsService
+	BlobStores *BlobStoresService
 }
 
 type ListOptions struct {
@@ -87,6 +88,7 @@ func newClient() (*Client, error) {
 	c.Assets = &AssetsService{client: c}
 	c.ExtDirect = &ExtDirectService{client: c}
 	c.Components = &ComponentsService{client: c}
+	c.BlobStores = &BlobStoresService{client: c}
 
 	return c, nil
 }
