@@ -153,7 +153,7 @@ go test ./... -v
 | /v1/blobstores/{name}                                               | DELETE | Delete a blob store by name                                                                         |        |   |
 | /v1/blobstores                                                      | GET    | List the blob stores                                                                                | ✅      |   |
 | /v1/blobstores/file                                                 | POST   | Create a file blob store                                                                            |        |   |
-| /v1/blobstores/file/{name}                                          | GET    | Get a file blob store configuration by name                                                         |        |   |
+| /v1/blobstores/file/{name}                                          | GET    | Get a file blob store configuration by name                                                         | ✅      |   |
 | /v1/blobstores/file/{name}                                          | PUT    | Update a file blob store configuration by name                                                      |        |   |
 | /v1/blobstores/s3/{name}                                            | GET    | Get a S3 blob store configuration by name                                                           |        |   |
 | /v1/blobstores/s3/{name}                                            | PUT    | Update an S3 blob store configuration by name                                                       |        |   |

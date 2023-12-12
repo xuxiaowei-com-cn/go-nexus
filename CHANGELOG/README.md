@@ -30,6 +30,7 @@
     - 新增 `DeleteAssets` 删除资产
     - 新增 `GetBlobStoresQuotaStatus` 获取给定blob存储区的配额状态
     - 新增 `ListBlobStores` 列出blob存储区
+    - 新增 `GetBlobStoresFile` 按名称获取文件blob存储区配置
     - 新增 `GetComponents` 获取组件详细信息
     - 新增 `ListComponents` 列出组件
     - 新增 `DeleteComponents` 删除组件

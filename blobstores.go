@@ -46,3 +46,22 @@ func (s *BlobStoresService) ListBlobStores(options ...RequestOptionFunc) ([]*Gen
 
 	return genericBlobStoreApiResponses, resp, nil
 }
+
+// GetBlobStoresFile 按名称获取文件blob存储区配置
+func (s *BlobStoresService) GetBlobStoresFile(name string, options ...RequestOptionFunc) (*FileBlobStoreApiModel, *Response, error) {
+
+	u := fmt.Sprintf("service/rest/v1/blobstores/file/%s", name)
+
+	req, err := s.client.NewRequest(http.MethodGet, u, nil, nil, options)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var fileBlobStoreApiModel *FileBlobStoreApiModel
+	resp, err := s.client.Do(req, &fileBlobStoreApiModel)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return fileBlobStoreApiModel, resp, nil
+}
