@@ -25,6 +25,7 @@
 ## v0.1.0
 
 - ⭐ New Features | 新功能
+    - 新增 `Download` 文件下载
     - 新增 `ListAssets` 列出资产
     - 新增 `GetAssets` 获取资产详细信息
     - 新增 `DeleteAssets` 删除资产

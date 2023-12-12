@@ -36,6 +36,7 @@ type Client struct {
 	UserAgent string
 
 	Swagger    *SwaggerService
+	File       *FileService
 	Repository *RepositoryService
 	Maven      *MavenService
 	Assets     *AssetsService
@@ -85,6 +86,7 @@ func newClient() (*Client, error) {
 	}
 
 	c.Swagger = &SwaggerService{client: c}
+	c.File = &FileService{client: c}
 	c.Repository = &RepositoryService{client: c}
 	c.Maven = &MavenService{client: c}
 	c.Assets = &AssetsService{client: c}
