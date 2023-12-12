@@ -15,11 +15,11 @@ type ListAssetsQuery struct {
 }
 
 // GetAssets 获取资产详细信息
-func (s *AssetsService) GetAssets(id string) (*AssetXO, *Response, error) {
+func (s *AssetsService) GetAssets(id string, options ...RequestOptionFunc) (*AssetXO, *Response, error) {
 
 	u := fmt.Sprintf("service/rest/v1/assets/%s", id)
 
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, nil)
+	req, err := s.client.NewRequest(http.MethodGet, u, nil, nil, options)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -34,11 +34,11 @@ func (s *AssetsService) GetAssets(id string) (*AssetXO, *Response, error) {
 }
 
 // DeleteAssets 删除资产
-func (s *AssetsService) DeleteAssets(id string) (*Response, error) {
+func (s *AssetsService) DeleteAssets(id string, options ...RequestOptionFunc) (*Response, error) {
 
 	u := fmt.Sprintf("service/rest/v1/assets/%s", id)
 
-	req, err := s.client.NewRequest(http.MethodDelete, u, nil, nil)
+	req, err := s.client.NewRequest(http.MethodDelete, u, nil, nil, options)
 	if err != nil {
 		return nil, err
 	}
@@ -52,11 +52,11 @@ func (s *AssetsService) DeleteAssets(id string) (*Response, error) {
 }
 
 // ListAssets 列出资产
-func (s *AssetsService) ListAssets(requestQuery *ListAssetsQuery) (*PageAssetXO, *Response, error) {
+func (s *AssetsService) ListAssets(requestQuery *ListAssetsQuery, options ...RequestOptionFunc) (*PageAssetXO, *Response, error) {
 
 	u := "service/rest/v1/assets"
 
-	req, err := s.client.NewRequest(http.MethodGet, u, requestQuery, nil)
+	req, err := s.client.NewRequest(http.MethodGet, u, requestQuery, nil, options)
 	if err != nil {
 		return nil, nil, err
 	}

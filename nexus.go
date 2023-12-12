@@ -110,7 +110,9 @@ func (c *Client) SetBaseURL(urlStr string) error {
 	return nil
 }
 
-func (c *Client) NewRequest(method string, path string, requestQuery interface{}, requestBody interface{}) (*retryablehttp.Request, error) {
+type RequestOptionFunc func(*retryablehttp.Request) error
+
+func (c *Client) NewRequest(method string, path string, requestQuery interface{}, requestBody interface{}, options []RequestOptionFunc) (*retryablehttp.Request, error) {
 
 	u := *c.baseURL
 	unescaped, err := url.PathUnescape(path)
@@ -160,10 +162,19 @@ func (c *Client) NewRequest(method string, path string, requestQuery interface{}
 		req.Header.Set("Authorization", fmt.Sprintf("Basic %s", base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", c.username, c.password)))))
 	}
 
+	for _, fn := range options {
+		if fn == nil {
+			continue
+		}
+		if err := fn(req); err != nil {
+			return nil, err
+		}
+	}
+
 	return req, nil
 }
 
-func (c *Client) UploadRequest(method, path string, content io.Reader, filename string) (*retryablehttp.Request, error) {
+func (c *Client) UploadRequest(method, path string, content io.Reader, filename string, options []RequestOptionFunc) (*retryablehttp.Request, error) {
 	u := *c.baseURL
 	unescaped, err := url.PathUnescape(path)
 	if err != nil {
@@ -209,6 +220,15 @@ func (c *Client) UploadRequest(method, path string, content io.Reader, filename 
 
 	if c.username != "" && c.password != "" {
 		req.Header.Set("Authorization", fmt.Sprintf("Basic %s", base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", c.username, c.password)))))
+	}
+
+	for _, fn := range options {
+		if fn == nil {
+			continue
+		}
+		if err := fn(req); err != nil {
+			return nil, err
+		}
 	}
 
 	return req, nil

@@ -16,11 +16,11 @@ type BrowseRepository struct {
 }
 
 // GetBrowseRepository 浏览仓库
-func (s *ExtDirectService) GetBrowseRepository(repository string, path string) ([]BrowseRepository, *Response, error) {
+func (s *ExtDirectService) GetBrowseRepository(repository string, path string, options ...RequestOptionFunc) ([]BrowseRepository, *Response, error) {
 
 	u := fmt.Sprintf("service/rest/repository/browse/%s/%s", repository, path)
 
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, nil)
+	req, err := s.client.NewRequest(http.MethodGet, u, nil, nil, options)
 	if err != nil {
 		return nil, nil, err
 	}

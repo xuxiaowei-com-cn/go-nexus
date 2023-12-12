@@ -13,7 +13,7 @@ func downloadMavenProxyRepository(t *testing.T, client *Client, repository strin
 	metadataSuffixList := []string{"", ".md5", ".sha1", ".sha256", ".sha512"}
 	for _, suffix := range metadataSuffixList {
 		u := fmt.Sprintf("repository/%s/org/springframework/boot/spring-boot/maven-metadata.xml%s", repository, suffix)
-		req, err := client.NewRequest(http.MethodGet, u, nil, nil)
+		req, err := client.NewRequest(http.MethodGet, u, nil, nil, nil)
 		if err != nil {
 			assert.NoError(t, err)
 		}
@@ -24,7 +24,7 @@ func downloadMavenProxyRepository(t *testing.T, client *Client, repository strin
 	}
 	for i := 1; i <= 18; i++ {
 		u := fmt.Sprintf("repository/%s/org/springframework/boot/spring-boot/2.7.%d/spring-boot-2.7.%d.pom", repository, i, i)
-		req, err := client.NewRequest(http.MethodGet, u, nil, nil)
+		req, err := client.NewRequest(http.MethodGet, u, nil, nil, nil)
 		if err != nil {
 			assert.NoError(t, err)
 		}
@@ -41,7 +41,7 @@ func downloadMavenProxyRepository(t *testing.T, client *Client, repository strin
 	for i := 1; i <= 3; i++ {
 		for _, file := range fileSuffixList {
 			u := fmt.Sprintf("repository/%s/org/springframework/boot/spring-boot/2.7.%d/spring-boot-2.7.%d%s", repository, i, i, file)
-			req, err := client.NewRequest(http.MethodGet, u, nil, nil)
+			req, err := client.NewRequest(http.MethodGet, u, nil, nil, nil)
 			if err != nil {
 				assert.NoError(t, err)
 			}

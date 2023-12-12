@@ -47,7 +47,7 @@ type PostExtDirectRead struct {
 }
 
 // PostExtDirectRead 搜索资产
-func (s *ExtDirectService) PostExtDirectRead(repository string, node string) (*PostExtDirectRead, *Response, error) {
+func (s *ExtDirectService) PostExtDirectRead(repository string, node string, options ...RequestOptionFunc) (*PostExtDirectRead, *Response, error) {
 
 	u := "service/extdirect"
 
@@ -64,7 +64,7 @@ func (s *ExtDirectService) PostExtDirectRead(repository string, node string) (*P
 		},
 	}
 
-	req, err := s.client.NewRequest(http.MethodPost, u, nil, requestBody)
+	req, err := s.client.NewRequest(http.MethodPost, u, nil, requestBody, options)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -155,7 +155,7 @@ type PostExtDirectReadAsset struct {
 }
 
 // PostExtDirectReadAsset 查看资产
-func (s *ExtDirectService) PostExtDirectReadAsset(repository string, assetId string) (*PostExtDirectReadAsset, *Response, error) {
+func (s *ExtDirectService) PostExtDirectReadAsset(repository string, assetId string, options ...RequestOptionFunc) (*PostExtDirectReadAsset, *Response, error) {
 
 	u := "service/extdirect"
 
@@ -170,7 +170,7 @@ func (s *ExtDirectService) PostExtDirectReadAsset(repository string, assetId str
 		},
 	}
 
-	req, err := s.client.NewRequest(http.MethodPost, u, nil, requestBody)
+	req, err := s.client.NewRequest(http.MethodPost, u, nil, requestBody, options)
 	if err != nil {
 		return nil, nil, err
 	}

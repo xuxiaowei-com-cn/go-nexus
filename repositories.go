@@ -9,11 +9,11 @@ type RepositoryService struct {
 }
 
 // ListRepository 列出存储库
-func (s *RepositoryService) ListRepository() ([]*RepositoryXO, *Response, error) {
+func (s *RepositoryService) ListRepository(options ...RequestOptionFunc) ([]*RepositoryXO, *Response, error) {
 
 	u := "service/rest/v1/repositories"
 
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, nil)
+	req, err := s.client.NewRequest(http.MethodGet, u, nil, nil, options)
 	if err != nil {
 		return nil, nil, err
 	}

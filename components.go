@@ -15,11 +15,11 @@ type ListComponentsQuery struct {
 }
 
 // ListComponents 列出组件
-func (s *ComponentsService) ListComponents(requestQuery *ListComponentsQuery) (*PageComponentXO, *Response, error) {
+func (s *ComponentsService) ListComponents(requestQuery *ListComponentsQuery, options ...RequestOptionFunc) (*PageComponentXO, *Response, error) {
 
 	u := "service/rest/v1/components"
 
-	req, err := s.client.NewRequest(http.MethodGet, u, requestQuery, nil)
+	req, err := s.client.NewRequest(http.MethodGet, u, requestQuery, nil, options)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -34,11 +34,11 @@ func (s *ComponentsService) ListComponents(requestQuery *ListComponentsQuery) (*
 }
 
 // DeleteComponents 删除组件
-func (s *ComponentsService) DeleteComponents(id string) (*Response, error) {
+func (s *ComponentsService) DeleteComponents(id string, options ...RequestOptionFunc) (*Response, error) {
 
 	u := fmt.Sprintf("service/rest/v1/components/%s", id)
 
-	req, err := s.client.NewRequest(http.MethodDelete, u, nil, nil)
+	req, err := s.client.NewRequest(http.MethodDelete, u, nil, nil, options)
 	if err != nil {
 		return nil, err
 	}
@@ -53,11 +53,11 @@ func (s *ComponentsService) DeleteComponents(id string) (*Response, error) {
 }
 
 // GetComponents 获取组件详细信息
-func (s *ComponentsService) GetComponents(id string) (*ComponentXO, *Response, error) {
+func (s *ComponentsService) GetComponents(id string, options ...RequestOptionFunc) (*ComponentXO, *Response, error) {
 
 	u := fmt.Sprintf("service/rest/v1/components/%s", id)
 
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, nil)
+	req, err := s.client.NewRequest(http.MethodGet, u, nil, nil, options)
 	if err != nil {
 		return nil, nil, err
 	}

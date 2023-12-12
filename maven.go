@@ -18,11 +18,11 @@ const (
 )
 
 // GetMavenRepository 获取 Maven 存储库
-func (s *MavenService) GetMavenRepository(mavenTypeValue MavenTypeValue, repositoryName string) (*SimpleApiGroupRepository, *Response, error) {
+func (s *MavenService) GetMavenRepository(mavenTypeValue MavenTypeValue, repositoryName string, options ...RequestOptionFunc) (*SimpleApiGroupRepository, *Response, error) {
 
 	u := fmt.Sprintf("service/rest/v1/repositories/maven/%s/%s", mavenTypeValue, repositoryName)
 
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, nil)
+	req, err := s.client.NewRequest(http.MethodGet, u, nil, nil, options)
 	if err != nil {
 		return nil, nil, err
 	}

@@ -21,11 +21,11 @@ type SwaggerService struct {
 
 // GetSwagger 获取 Swagger 配置
 // 接口不需要凭证
-func (s *SwaggerService) GetSwagger() (*Swagger, *Response, error) {
+func (s *SwaggerService) GetSwagger(options ...RequestOptionFunc) (*Swagger, *Response, error) {
 
 	u := "service/rest/swagger.json"
 
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, nil)
+	req, err := s.client.NewRequest(http.MethodGet, u, nil, nil, options)
 	if err != nil {
 		return nil, nil, err
 	}
