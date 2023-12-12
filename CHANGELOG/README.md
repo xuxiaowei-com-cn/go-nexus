@@ -32,6 +32,7 @@
     - 新增 `PostExtDirectRead` 搜索资产
     - 新增 `PostExtDirectReadAsset` 查看资产详细信息
     - 新增 `GetBrowseRepository` 浏览仓库
+    - 新增 `ListComponents` 列出组件
 
 ## v0.0.1
 
