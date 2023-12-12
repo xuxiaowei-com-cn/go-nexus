@@ -255,6 +255,11 @@ func (c *Client) Do(req *retryablehttp.Request, v interface{}) (*Response, error
 					return response, err
 				}
 				response.body = string(bodyBytes)
+			} else if strings.Contains(contentType, "application/xml") ||
+				strings.Contains(contentType, "text/plain") ||
+				strings.Contains(contentType, "application/java-archive") ||
+				strings.Contains(contentType, "application/pgp-signature") {
+
 			} else {
 				err = fmt.Errorf("unknown response type: %s", contentType)
 			}
@@ -321,4 +326,12 @@ func parseError(raw interface{}) string {
 	default:
 		return fmt.Sprintf("failed to parse unexpected error type: %T", raw)
 	}
+}
+
+func Getenv(key string, defaultValue string) string {
+	var value = os.Getenv(key)
+	if value == "" {
+		return defaultValue
+	}
+	return value
 }

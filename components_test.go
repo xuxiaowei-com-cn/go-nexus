@@ -3,19 +3,20 @@ package nexus
 import (
 	"github.com/stretchr/testify/assert"
 	"net/http"
-	"os"
 	"testing"
 )
 
 func TestListComponents(t *testing.T) {
 
-	var baseURL = os.Getenv("GO_NEXUS_BASE_URL")
-	var username = os.Getenv("GO_NEXUS_USERNAME")
-	var password = os.Getenv("GO_NEXUS_PASSWORD")
-	var repository = os.Getenv("GO_NEXUS_MAVEN_REPOSITORY")
+	var baseURL = Getenv("GO_NEXUS_BASE_URL", "http://127.0.0.1:8081/")
+	var username = Getenv("GO_NEXUS_USERNAME", "admin")
+	var password = Getenv("GO_NEXUS_PASSWORD", "password")
+	var repository = Getenv("GO_NEXUS_MAVEN_PROXY_REPOSITORY", "maven-central")
 
 	client, err := NewClient(baseURL, username, password)
 	assert.NoError(t, err)
+
+	downloadMavenProxyRepository(t, client, repository)
 
 	ListComponentsRecursion(t, repository, "", client)
 }
@@ -33,8 +34,7 @@ func ListComponentsRecursion(t *testing.T, repository string, continuationToken 
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, response.StatusCode)
 
-	// t.Log("ContinuationToken:", pageComponentXO.ContinuationToken)
-	// t.Log("Items Len:", len(pageComponentXO.Items))
+	assert.NotEqual(t, 0, len(pageComponentXO.Items))
 
 	for _, item := range pageComponentXO.Items {
 		t.Logf("%s %s:%s:%s", item.Repository, item.Group, item.Name, item.Version)
