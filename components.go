@@ -43,8 +43,7 @@ func (s *ComponentsService) DeleteComponents(id string, options ...RequestOption
 		return nil, err
 	}
 
-	var pageComponentXO *PageComponentXO
-	resp, err := s.client.Do(req, &pageComponentXO)
+	resp, err := s.client.Do(req, nil)
 	if err != nil {
 		return resp, err
 	}

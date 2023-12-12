@@ -43,7 +43,7 @@ func (s *AssetsService) DeleteAssets(id string, options ...RequestOptionFunc) (*
 		return nil, err
 	}
 
-	resp, err := s.client.Do(req, "")
+	resp, err := s.client.Do(req, nil)
 	if err != nil {
 		return resp, err
 	}
