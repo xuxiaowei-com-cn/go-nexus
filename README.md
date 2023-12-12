@@ -149,7 +149,7 @@ go test ./... -v
 | /v1/assets/{id}                                                     | DELETE | Delete a single asset                                                                               | ✅      |   |
 | /v1/assets                                                          | GET    | List assets                                                                                         | ✅      |   |
 | /v1/azureblobstore/test-connection                                  | POST   | Verify connection using supplied Azure Blob Store settings                                          |        |   |
-| /v1/blobstores/{name}/quota-status                                  | GET    | Get quota status for a given blob store                                                             |        |   |
+| /v1/blobstores/{name}/quota-status                                  | GET    | Get quota status for a given blob store                                                             | ✅      |   |
 | /v1/blobstores/{name}                                               | DELETE | Delete a blob store by name                                                                         |        |   |
 | /v1/blobstores                                                      | GET    | List the blob stores                                                                                | ✅      |   |
 | /v1/blobstores/file                                                 | POST   | Create a file blob store                                                                            |        |   |
