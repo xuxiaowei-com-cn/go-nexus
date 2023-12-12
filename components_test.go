@@ -33,7 +33,7 @@ func TestListComponents_GetComponents_DeleteComponents_maven_proxy(t *testing.T)
 	componentXO, response, err := client.Components.GetComponents(item.Id)
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, response.StatusCode)
-	t.Log("DownloadUrl:", componentXO.Id)
+	t.Log("Id:", componentXO.Id)
 
 	response, err = client.Components.DeleteComponents(item.Id)
 	assert.NoError(t, err)
