@@ -15,7 +15,6 @@ func TestGetSwagger(t *testing.T) {
 
 	swagger, response, err := client.Swagger.GetSwagger()
 	assert.NoError(t, err)
-	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, response.StatusCode)
 
 	t.Log("Nexus Version:", swagger.Info.Version)
