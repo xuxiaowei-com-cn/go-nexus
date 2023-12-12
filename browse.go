@@ -12,6 +12,7 @@ type BrowseRepository struct {
 	Href string `json:"href,omitempty"`
 	Url  string `json:"url,omitempty"`
 	Text string `json:"text,omitempty"`
+	Path string `json:"path,omitempty"`
 	Type string `json:"type,omitempty"`
 }
 
@@ -49,6 +50,7 @@ func (s *ExtDirectService) GetBrowseRepository(repository string, path string, o
 			browseRepository := BrowseRepository{
 				Href: href,
 				Text: text,
+				Path: path + href,
 			}
 
 			if browseRepository.Href[len(browseRepository.Href)-1] == '/' {
