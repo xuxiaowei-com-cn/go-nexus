@@ -24,10 +24,10 @@ func TestGetBrowseRepositoryRecursion_maven_proxy(t *testing.T) {
 
 	downloadMavenProxyRepository(t, client, repository, tempDir)
 
-	GetBrowseRepositoryRecursion(t, baseURL, username, password, repository, path, client)
+	GetBrowseRepositoryRecursion(t, baseURL, username, password, repository, path, client, tempDir)
 }
 
-func GetBrowseRepositoryRecursion(t *testing.T, baseURL string, username string, password string, repository string, path string, client *Client) {
+func GetBrowseRepositoryRecursion(t *testing.T, baseURL string, username string, password string, repository string, path string, client *Client, tempDir string) {
 
 	browses, response, err := client.ExtDirect.GetBrowseRepository(repository, path)
 	assert.NoError(t, err)
@@ -37,9 +37,19 @@ func GetBrowseRepositoryRecursion(t *testing.T, baseURL string, username string,
 
 	for _, browse := range browses {
 		if browse.Type == "file" {
-			t.Log(browse.Url)
+
+			var filePath = filepath.Join(tempDir, browse.Path)
+			var fileFolder = filepath.Dir(filePath)
+
+			err = os.MkdirAll(fileFolder, os.ModePerm)
+			assert.NoError(t, err)
+
+			response, err = client.File.Download(http.MethodGet, browse.Url, filePath, nil, nil)
+			assert.NoError(t, err)
+			assert.Equal(t, http.StatusOK, response.StatusCode)
+
 		} else {
-			GetBrowseRepositoryRecursion(t, baseURL, username, password, repository, path+browse.Href, client)
+			GetBrowseRepositoryRecursion(t, baseURL, username, password, repository, path+browse.Href, client, tempDir)
 		}
 	}
 
