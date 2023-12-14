@@ -57,22 +57,17 @@ type ListOptions struct {
 }
 
 func NewClient(baseURL string, username string, password string) (*Client, error) {
-	client, err := newClient()
+	c := &Client{UserAgent: userAgent}
+	client, err := BuildClient(c, baseURL, username, password)
 	if err != nil {
 		return nil, err
 	}
-	err = client.SetBaseURL(baseURL)
-	if err != nil {
-		return nil, err
-	}
-	client.username = username
-	client.password = password
 	return client, nil
 }
 
 // BuildClient
 // retryablehttp.NewClient()
-func BuildClient(c *Client) (*Client, error) {
+func BuildClient(c *Client, baseURL string, username string, password string) (*Client, error) {
 	if c.Logger == nil {
 		if c.Out == nil {
 			c.Out = os.Stdout
@@ -104,12 +99,14 @@ func BuildClient(c *Client) (*Client, error) {
 	c.Status = &StatusService{client: c}
 	c.Users = &UsersService{client: c}
 
-	return c, nil
-}
+	err := c.SetBaseURL(baseURL)
+	if err != nil {
+		return nil, err
+	}
+	c.username = username
+	c.password = password
 
-func newClient() (*Client, error) {
-	c := &Client{UserAgent: userAgent}
-	return BuildClient(c)
+	return c, nil
 }
 
 func (c *Client) BaseURL() *url.URL {
