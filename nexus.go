@@ -21,8 +21,7 @@ import (
 )
 
 const (
-	defaultBaseURL = "http://127.0.0.1:8081/"
-	userAgent      = "go-nexus"
+	userAgent = "go-nexus"
 )
 
 type Client struct {
@@ -92,11 +91,6 @@ func BuildClient(c *Client) (*Client, error) {
 		RetryMax:     4,
 		CheckRetry:   retryablehttp.DefaultRetryPolicy,
 		Backoff:      retryablehttp.DefaultBackoff,
-	}
-
-	err := c.SetBaseURL(defaultBaseURL)
-	if err != nil {
-		return nil, err
 	}
 
 	c.Swagger = &SwaggerService{client: c}
