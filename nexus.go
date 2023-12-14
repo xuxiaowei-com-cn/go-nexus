@@ -35,6 +35,11 @@ type Client struct {
 
 	UserAgent string
 
+	Logger interface{} // 日志配置，优先级高于：Out、Prefix、Flag
+	Out    io.Writer   // 日志配置
+	Prefix string      // 日志配置
+	Flag   int         // 日志配置
+
 	Swagger    *SwaggerService
 	File       *FileService
 	Repository *RepositoryService
@@ -70,9 +75,19 @@ func NewClient(baseURL string, username string, password string) (*Client, error
 func newClient() (*Client, error) {
 	c := &Client{UserAgent: userAgent}
 
+	if c.Logger == nil {
+		if c.Out == nil {
+			c.Out = os.Stdout
+		}
+		if c.Flag == 0 {
+			c.Flag = log.LstdFlags
+		}
+		c.Logger = log.New(c.Out, c.Prefix, c.Flag)
+	}
+
 	c.client = &retryablehttp.Client{
 		HTTPClient:   cleanhttp.DefaultPooledClient(),
-		Logger:       log.New(os.Stderr, "", log.LstdFlags),
+		Logger:       c.Logger,
 		RetryWaitMin: 1 * time.Second,
 		RetryWaitMax: 30 * time.Second,
 		RetryMax:     4,
