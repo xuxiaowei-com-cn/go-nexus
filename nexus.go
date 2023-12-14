@@ -71,10 +71,9 @@ func NewClient(baseURL string, username string, password string) (*Client, error
 	return client, nil
 }
 
+// BuildClient
 // retryablehttp.NewClient()
-func newClient() (*Client, error) {
-	c := &Client{UserAgent: userAgent}
-
+func BuildClient(c *Client) (*Client, error) {
 	if c.Logger == nil {
 		if c.Out == nil {
 			c.Out = os.Stdout
@@ -112,6 +111,11 @@ func newClient() (*Client, error) {
 	c.Users = &UsersService{client: c}
 
 	return c, nil
+}
+
+func newClient() (*Client, error) {
+	c := &Client{UserAgent: userAgent}
+	return BuildClient(c)
 }
 
 func (c *Client) BaseURL() *url.URL {
