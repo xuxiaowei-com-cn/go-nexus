@@ -64,7 +64,7 @@ func (s *RepositoryService) UploadFolder(folder string, repositoryName string, o
 
 		filePathTmp := strings.ToLower(filePath)
 
-		if versionPolicy != "SNAPSHOT" && strings.Contains(filePathTmp, "snapshots") || strings.Contains(filePathTmp, "SNAPSHOT") {
+		if versionPolicy != "SNAPSHOT" && strings.Contains(filePathTmp, "snapshot") {
 			return nil
 		}
 
