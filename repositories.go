@@ -54,7 +54,10 @@ func (s *RepositoryService) UploadFolder(folder string, repositoryName string, o
 
 		fileName := filepath.Base(path)
 
-		if fileName == "desktop.ini" || fileName == "_remote.repositories" ||
+		if fileName == "desktop.ini" || fileName == "_remote.repositories" || fileName == "resolver-status.properties" ||
+			strings.HasPrefix(fileName, "maven-metadata") ||
+			strings.HasSuffix(fileName, ".xml") || strings.HasSuffix(fileName, ".part.lock") ||
+			strings.HasSuffix(fileName, ".tmp") ||
 			strings.HasSuffix(fileName, ".lastUpdated") || strings.HasSuffix(fileName, ".sha1") {
 			return nil
 		}
