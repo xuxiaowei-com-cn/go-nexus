@@ -59,12 +59,14 @@ func (s *RepositoryService) UploadFolder(folder string, repositoryName string, o
 			return nil
 		}
 
-		if versionPolicy != "SNAPSHOT" && strings.Contains(fileName, "snapshots") || strings.Contains(fileName, "SNAPSHOTS") {
-			return nil
-		}
-
 		filePath := path[len(folder)+1:]
 		//tmp := filePath[:len(filePath)-len(fileName)-1]
+
+		filePathTmp := strings.ToLower(filePath)
+
+		if versionPolicy != "SNAPSHOT" && strings.Contains(filePathTmp, "snapshots") || strings.Contains(filePathTmp, "SNAPSHOT") {
+			return nil
+		}
 
 		log.Printf("上传 文件 %s 开始", path)
 
