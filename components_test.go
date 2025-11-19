@@ -3,8 +3,11 @@ package nexus
 import (
 	"context"
 	"fmt"
+	"io"
 	"net/http"
 	"os"
+	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 
@@ -103,4 +106,372 @@ func Test_ListComponents(t *testing.T) {
 			break
 		}
 	}
+}
+
+func Test_UploadComponents_Maven(t *testing.T) {
+	base := os.Getenv("NEXUS_BASE_URL")
+	if base == "" {
+		base = "http://127.0.0.1:48081"
+	}
+	u := os.Getenv("NEXUS_USERNAME")
+	p := os.Getenv("NEXUS_PASSWORD")
+	if u == "" || p == "" {
+		t.Skip("missing NEXUS_USERNAME or NEXUS_PASSWORD")
+	}
+	c := New(base)
+	c.Username = u
+	c.Password = p
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+	defer cancel()
+
+	hosted := fmt.Sprintf(TestRepositoriesNamePrefix+"maven-hosted-%d", time.Now().UnixNano())
+
+	{
+		hreq := MavenHostedRepositoryApiRequest{
+			Name:   hosted,
+			Online: true,
+			Storage: HostedStorageAttributes{
+				BlobStoreName:               "default",
+				StrictContentTypeValidation: true,
+				WritePolicy:                 "allow_once",
+			},
+			Maven: MavenAttributes{
+				VersionPolicy:      "MIXED",
+				LayoutPolicy:       "STRICT",
+				ContentDisposition: "ATTACHMENT",
+			},
+		}
+		require.NoError(t, c.CreateMavenHostedRepository(ctx, hreq))
+	}
+
+	folder := "./tmp"
+	err := os.MkdirAll(folder, 0o755)
+	require.NoError(t, err)
+
+	t.Run("pom", func(t *testing.T) {
+		groupId := "org.springframework.boot"
+		artifactId := "spring-boot-dependencies"
+		version := "2.7.14"
+		extension := "pom"
+		filePath := filepath.Join(folder, fmt.Sprintf("%s-%s.%s", artifactId, version, extension))
+
+		{
+			baseUrl := "https://repo1.maven.org/maven2"
+			u := fmt.Sprintf("%s/%s/%s/%s/%s-%s.%s", baseUrl, strings.ReplaceAll(groupId, ".", "/"), artifactId, version, artifactId, version, extension)
+			_, _, err := downloadToFile(u, filePath, "", "")
+			require.NoError(t, err)
+		}
+
+		defer os.Remove(filePath)
+		f, err := os.Open(filePath)
+		require.NoError(t, err)
+		defer f.Close()
+
+		assets := UploadAssets{
+			maven2: &UploadAssetMaven2{
+				groupId:         groupId,
+				artifactId:      artifactId,
+				version:         version,
+				asset1Extension: extension,
+				asset1:          f,
+			},
+		}
+		require.NoError(t, c.UploadComponents(ctx, hosted, assets))
+
+		page, err := c.ListComponents(ctx, hosted, "")
+		require.NoError(t, err)
+		require.NotNil(t, page)
+		var found *Component
+		for i := range page.Items {
+			it := page.Items[i]
+			if it.Group == groupId && it.Name == artifactId && it.Version == version {
+				found = &it
+				break
+			}
+		}
+		require.NotNil(t, found)
+		component, err := c.GetComponentByID(ctx, found.ID)
+		require.NoError(t, err)
+		require.NotNil(t, component)
+
+		err = c.DeleteComponentByID(ctx, found.ID)
+		require.NoError(t, err)
+	})
+
+	t.Run("jar", func(t *testing.T) {
+		groupId := "org.springframework.boot"
+		artifactId := "spring-boot-starter-web"
+		version := "2.7.14"
+		extension := "jar"
+		filePath := filepath.Join(folder, fmt.Sprintf("%s-%s.%s", artifactId, version, extension))
+
+		{
+			baseUrl := "https://repo1.maven.org/maven2"
+			u := fmt.Sprintf("%s/%s/%s/%s/%s-%s.%s", baseUrl, strings.ReplaceAll(groupId, ".", "/"), artifactId, version, artifactId, version, extension)
+			_, _, err := downloadToFile(u, filePath, "", "")
+			require.NoError(t, err)
+		}
+
+		defer os.Remove(filePath)
+		f, err := os.Open(filePath)
+		require.NoError(t, err)
+		defer f.Close()
+
+		generatePom := true
+
+		assets := UploadAssets{
+			maven2: &UploadAssetMaven2{
+				groupId:         groupId,
+				artifactId:      artifactId,
+				version:         version,
+				generatePom:     &generatePom,
+				asset1Extension: extension,
+				asset1:          f,
+			},
+		}
+		require.NoError(t, c.UploadComponents(ctx, hosted, assets))
+
+		page, err := c.ListComponents(ctx, hosted, "")
+		require.NoError(t, err)
+		require.NotNil(t, page)
+		var found *Component
+		for i := range page.Items {
+			it := page.Items[i]
+			if it.Group == groupId && it.Name == artifactId && it.Version == version {
+				found = &it
+				break
+			}
+		}
+		require.NotNil(t, found)
+		component, err := c.GetComponentByID(ctx, found.ID)
+		require.NoError(t, err)
+		require.NotNil(t, component)
+
+		err = c.DeleteComponentByID(ctx, found.ID)
+		require.NoError(t, err)
+	})
+
+	t.Run("sources", func(t *testing.T) {
+		groupId := "org.springframework.boot"
+		artifactId := "spring-boot-starter-web"
+		version := "2.7.14"
+		extension := "jar"
+		classifier := "sources"
+
+		filePath := filepath.Join(folder, fmt.Sprintf("%s-%s-%s.%s", artifactId, version, classifier, extension))
+
+		{
+			baseUrl := "https://repo1.maven.org/maven2"
+			u := fmt.Sprintf("%s/%s/%s/%s/%s-%s-%s.%s", baseUrl, strings.ReplaceAll(groupId, ".", "/"), artifactId, version, artifactId, version, classifier, extension)
+			_, _, err := downloadToFile(u, filePath, "", "")
+			require.NoError(t, err)
+		}
+
+		defer os.Remove(filePath)
+		f, err := os.Open(filePath)
+		require.NoError(t, err)
+		defer f.Close()
+
+		assets := UploadAssets{
+			maven2: &UploadAssetMaven2{
+				groupId:          groupId,
+				artifactId:       artifactId,
+				version:          version,
+				asset1Extension:  extension,
+				asset1Classifier: classifier,
+				asset1:           f,
+			},
+		}
+		require.NoError(t, c.UploadComponents(ctx, hosted, assets))
+
+		page, err := c.ListComponents(ctx, hosted, "")
+		require.NoError(t, err)
+		require.NotNil(t, page)
+		var found *Component
+		for i := range page.Items {
+			it := page.Items[i]
+			if it.Group == groupId && it.Name == artifactId && it.Version == version {
+				found = &it
+				break
+			}
+		}
+		require.NotNil(t, found)
+		component, err := c.GetComponentByID(ctx, found.ID)
+		require.NoError(t, err)
+		require.NotNil(t, component)
+
+		err = c.DeleteComponentByID(ctx, found.ID)
+		require.NoError(t, err)
+	})
+
+	t.Run("javadoc", func(t *testing.T) {
+		groupId := "org.springframework.boot"
+		artifactId := "spring-boot-starter-web"
+		version := "2.7.14"
+		extension := "jar"
+		classifier := "javadoc"
+
+		filePath := filepath.Join(folder, fmt.Sprintf("%s-%s-%s.%s", artifactId, version, classifier, extension))
+
+		{
+			baseUrl := "https://repo1.maven.org/maven2"
+			u := fmt.Sprintf("%s/%s/%s/%s/%s-%s-%s.%s", baseUrl, strings.ReplaceAll(groupId, ".", "/"), artifactId, version, artifactId, version, classifier, extension)
+			_, _, err := downloadToFile(u, filePath, "", "")
+			require.NoError(t, err)
+		}
+
+		defer os.Remove(filePath)
+		f, err := os.Open(filePath)
+		require.NoError(t, err)
+		defer f.Close()
+
+		assets := UploadAssets{
+			maven2: &UploadAssetMaven2{
+				groupId:          groupId,
+				artifactId:       artifactId,
+				version:          version,
+				asset1Extension:  extension,
+				asset1Classifier: classifier,
+				asset1:           f,
+			},
+		}
+		require.NoError(t, c.UploadComponents(ctx, hosted, assets))
+
+		page, err := c.ListComponents(ctx, hosted, "")
+		require.NoError(t, err)
+		require.NotNil(t, page)
+		var found *Component
+		for i := range page.Items {
+			it := page.Items[i]
+			if it.Group == groupId && it.Name == artifactId && it.Version == version {
+				found = &it
+				break
+			}
+		}
+		require.NotNil(t, found)
+		component, err := c.GetComponentByID(ctx, found.ID)
+		require.NoError(t, err)
+		require.NotNil(t, component)
+
+		err = c.DeleteComponentByID(ctx, found.ID)
+		require.NoError(t, err)
+	})
+
+	t.Run("jar-sources-javadoc", func(t *testing.T) {
+		groupId := "org.springframework.boot"
+		artifactId := "spring-boot-starter-web"
+		version := "2.7.10"
+		extension := "jar"
+
+		classifierSources := "sources"
+		classifierJavadoc := "javadoc"
+
+		filePathJar := filepath.Join(folder, fmt.Sprintf("%s-%s.%s", artifactId, version, extension))
+		filePathSources := filepath.Join(folder, fmt.Sprintf("%s-%s-%s.%s", artifactId, version, classifierSources, extension))
+		filePathJavadoc := filepath.Join(folder, fmt.Sprintf("%s-%s-%s.%s", artifactId, version, classifierJavadoc, extension))
+
+		{
+			baseUrl := "https://repo1.maven.org/maven2"
+			u := fmt.Sprintf("%s/%s/%s/%s/%s-%s.%s", baseUrl, strings.ReplaceAll(groupId, ".", "/"), artifactId, version, artifactId, version, extension)
+			_, _, err := downloadToFile(u, filePathJar, "", "")
+			require.NoError(t, err)
+		}
+		{
+			baseUrl := "https://repo1.maven.org/maven2"
+			u := fmt.Sprintf("%s/%s/%s/%s/%s-%s-%s.%s", baseUrl, strings.ReplaceAll(groupId, ".", "/"), artifactId, version, artifactId, version, classifierSources, extension)
+			_, _, err := downloadToFile(u, filePathSources, "", "")
+			require.NoError(t, err)
+		}
+		{
+			baseUrl := "https://repo1.maven.org/maven2"
+			u := fmt.Sprintf("%s/%s/%s/%s/%s-%s-%s.%s", baseUrl, strings.ReplaceAll(groupId, ".", "/"), artifactId, version, artifactId, version, classifierJavadoc, extension)
+			_, _, err := downloadToFile(u, filePathJavadoc, "", "")
+			require.NoError(t, err)
+		}
+
+		defer os.Remove(filePathJar)
+		defer os.Remove(filePathSources)
+		defer os.Remove(filePathJavadoc)
+		fJar, err := os.Open(filePathJar)
+		require.NoError(t, err)
+		defer fJar.Close()
+
+		fSources, err := os.Open(filePathSources)
+		require.NoError(t, err)
+		defer fSources.Close()
+
+		fJavadoc, err := os.Open(filePathJavadoc)
+		require.NoError(t, err)
+		defer fJavadoc.Close()
+
+		generatePom := true
+
+		assets := UploadAssets{
+			maven2: &UploadAssetMaven2{
+				groupId:          groupId,
+				artifactId:       artifactId,
+				version:          version,
+				generatePom:      &generatePom,
+				asset1Extension:  extension,
+				asset1:           fJar,
+				asset2Classifier: classifierSources,
+				asset2Extension:  extension,
+				asset2:           fSources,
+				asset3Classifier: classifierJavadoc,
+				asset3Extension:  extension,
+				asset3:           fJavadoc,
+			},
+		}
+		require.NoError(t, c.UploadComponents(ctx, hosted, assets))
+
+		page, err := c.ListComponents(ctx, hosted, "")
+		require.NoError(t, err)
+		require.NotNil(t, page)
+		var found *Component
+		for i := range page.Items {
+			it := page.Items[i]
+			if it.Group == groupId && it.Name == artifactId && it.Version == version {
+				found = &it
+				break
+			}
+		}
+		require.NotNil(t, found)
+		component, err := c.GetComponentByID(ctx, found.ID)
+		require.NoError(t, err)
+		require.NotNil(t, component)
+
+		err = c.DeleteComponentByID(ctx, found.ID)
+		require.NoError(t, err)
+	})
+
+	err = c.DeleteRepository(ctx, hosted)
+	require.NoError(t, err)
+}
+
+func downloadToFile(url string, filePath string, username string, password string) (int64, time.Duration, error) {
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return 0, 0, err
+	}
+	if username != "" || password != "" {
+		req.SetBasicAuth(username, password)
+	}
+	client := &http.Client{Timeout: 300 * time.Second}
+	resp, err := client.Do(req)
+	if err != nil {
+		return 0, 0, err
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		return 0, 0, fmt.Errorf("下载失败: %s => 状态码 %d", url, resp.StatusCode)
+	}
+	f, err := os.Create(filePath)
+	if err != nil {
+		return 0, 0, err
+	}
+	defer f.Close()
+	start := time.Now()
+	n, err := io.Copy(f, resp.Body)
+	dur := time.Since(start)
+	return n, dur, err
 }

@@ -104,3 +104,40 @@ func (c *Client) do(ctx context.Context, method, url string, body io.Reader) ([]
 	}
 	return b, resp, nil
 }
+
+func (c *Client) doWithHeaders(ctx context.Context, method, url string, body io.Reader, headers map[string]string) ([]byte, *http.Response, error) {
+	req, err := http.NewRequestWithContext(ctx, method, url, body)
+	if err != nil {
+		return nil, nil, err
+	}
+	if c.Username != "" || c.Password != "" {
+		req.SetBasicAuth(c.Username, c.Password)
+	}
+	if headers != nil {
+		for k, v := range headers {
+			req.Header.Set(k, v)
+		}
+	} else if body != nil {
+		req.Header.Set("Content-Type", "application/json")
+	}
+
+	rreq, err := retryablehttp.FromRequest(req)
+	if err != nil {
+		return nil, nil, err
+	}
+	resp, err := c.retryClient().Do(rreq)
+	if err != nil {
+		return nil, nil, err
+	}
+	defer resp.Body.Close()
+	b, _ := io.ReadAll(resp.Body)
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		if resp.StatusCode != http.StatusTooManyRequests && resp.StatusCode < 500 {
+			if len(b) > 0 {
+				return nil, resp, errors.New(string(b))
+			}
+		}
+		return nil, resp, errors.New(resp.Status)
+	}
+	return b, resp, nil
+}

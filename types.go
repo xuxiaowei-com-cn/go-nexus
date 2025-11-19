@@ -1,5 +1,7 @@
 package nexus
 
+import "io"
+
 // Asset 资产实体（Swagger: AssetXO）
 // Asset entity (Swagger: AssetXO)
 type Asset struct {
@@ -1014,4 +1016,50 @@ type Component struct {
 type PageComponent struct {
 	ContinuationToken string      `json:"continuationToken"`
 	Items             []Component `json:"items"`
+}
+
+// UploadAssets 通用构件上传载体（Swagger: POST /v1/components, operationId: uploadComponent）
+// Generic upload carrier for components (Swagger: POST /v1/components, operationId: uploadComponent)
+//
+// 说明 / Notes:
+// - swagger.json 同时支持 apt/pypi/raw/npm/nuget/rubygems/helm/docker 等格式的表单字段；
+// - 当前实现聚焦 Maven2（maven2.* 字段），其他格式可按需扩展。
+type UploadAssets struct {
+	maven2 *UploadAssetMaven2
+}
+
+// UploadAssetMaven2 Maven2 构件上传字段映射（multipart/form-data）
+// Maven2 upload form fields mapping (multipart/form-data)
+//
+// 字段 / Fields：
+// - maven2.groupId：Group ID（如 org.springframework.boot）
+// - maven2.artifactId：Artifact ID（如 spring-boot-starter-web）
+// - maven2.version：版本号（如 2.7.14）
+// - maven2.generate-pom：按坐标生成 POM（boolean，可选）/ generate POM by coordinates (optional)
+// - maven2.packaging：打包类型（如 jar/pom，可选）/ packaging type (optional)
+// - maven2.asset1：主构件文件 / primary artifact file
+// - maven2.asset1.classifier：主构件分类（如 sources/javadoc，可选）/ classifier for primary artifact (optional)
+// - maven2.asset1.extension：主构件扩展名（如 jar/pom）/ extension for primary artifact
+// - maven2.asset2/maven2.asset3：副构件文件 / secondary artifact files
+// - maven2.assetN.classifier：副构件分类（可选）/ classifier for secondary artifacts (optional)
+// - maven2.assetN.extension：副构件扩展名 / extension for secondary artifacts
+type UploadAssetMaven2 struct {
+	groupId    string
+	artifactId string
+	version    string
+
+	generatePom *bool
+	packaging   string
+
+	asset1Extension  string
+	asset1Classifier string
+	asset1           io.Reader
+
+	asset2Extension  string
+	asset2Classifier string
+	asset2           io.Reader
+
+	asset3Extension  string
+	asset3Classifier string
+	asset3           io.Reader
 }
