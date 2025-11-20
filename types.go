@@ -1025,14 +1025,29 @@ type PageComponent struct {
 // - swagger.json 同时支持 apt/pypi/raw/npm/nuget/rubygems/helm/docker 等格式的表单字段；
 // - 当前实现聚焦 Maven2（maven2.* 字段），其他格式可按需扩展。
 type UploadAssets struct {
-	yum    *UploadAssetYum
-	maven2 *UploadAssetMaven2
+	// Yum 上传（multipart/form-data）字段映射（Swagger: POST /v1/components）
+	// Yum upload (multipart/form-data) field mapping (Swagger: POST /v1/components)
+	// - yum.asset：RPM 包文件体 / asset binary
+	// - yum.asset.filename：RPM 包文件名 / asset filename
+	// - yum.directory：可选，存放子目录 / optional subdirectory
+	Yum *UploadAssetYum
+	// Maven2 上传字段映射，详见 UploadAssetMaven2
+	Maven2 *UploadAssetMaven2
 }
 
+// UploadAssetYum Yum 构件上传字段映射（multipart/form-data）
+// Yum upload form fields mapping (multipart/form-data)
+// 字段 / Fields：
+// - yum.asset：文件体（必填）/ asset binary (required)
+// - yum.asset.filename：文件名（必填）/ asset filename (required)
+// - yum.directory：存放子目录（可选）/ subdirectory (optional)
 type UploadAssetYum struct {
-	directory     string
-	asset         io.Reader
-	assetFilename string
+	// 映射 yum.directory
+	Directory string
+	// 映射 yum.asset（文件体）
+	Asset io.Reader
+	// 映射 yum.asset.filename（文件名）
+	AssetFilename string
 }
 
 // UploadAssetMaven2 Maven2 构件上传字段映射（multipart/form-data）
@@ -1051,22 +1066,22 @@ type UploadAssetYum struct {
 // - maven2.assetN.classifier：副构件分类（可选）/ classifier for secondary artifacts (optional)
 // - maven2.assetN.extension：副构件扩展名 / extension for secondary artifacts
 type UploadAssetMaven2 struct {
-	groupId    string
-	artifactId string
-	version    string
+	GroupId    string
+	ArtifactId string
+	Version    string
 
-	generatePom *bool
-	packaging   string
+	GeneratePom *bool
+	Packaging   string
 
-	asset1Extension  string
-	asset1Classifier string
-	asset1           io.Reader
+	Asset1Extension  string
+	Asset1Classifier string
+	Asset1           io.Reader
 
-	asset2Extension  string
-	asset2Classifier string
-	asset2           io.Reader
+	Asset2Extension  string
+	Asset2Classifier string
+	Asset2           io.Reader
 
-	asset3Extension  string
-	asset3Classifier string
-	asset3           io.Reader
+	Asset3Extension  string
+	Asset3Classifier string
+	Asset3           io.Reader
 }

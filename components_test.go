@@ -168,12 +168,12 @@ func Test_UploadComponents_Maven(t *testing.T) {
 		defer f.Close()
 
 		assets := UploadAssets{
-			maven2: &UploadAssetMaven2{
-				groupId:         groupId,
-				artifactId:      artifactId,
-				version:         version,
-				asset1Extension: extension,
-				asset1:          f,
+			Maven2: &UploadAssetMaven2{
+				GroupId:         groupId,
+				ArtifactId:      artifactId,
+				Version:         version,
+				Asset1Extension: extension,
+				Asset1:          f,
 			},
 		}
 		require.NoError(t, c.UploadComponents(ctx, hosted, assets))
@@ -220,13 +220,13 @@ func Test_UploadComponents_Maven(t *testing.T) {
 		generatePom := true
 
 		assets := UploadAssets{
-			maven2: &UploadAssetMaven2{
-				groupId:         groupId,
-				artifactId:      artifactId,
-				version:         version,
-				generatePom:     &generatePom,
-				asset1Extension: extension,
-				asset1:          f,
+			Maven2: &UploadAssetMaven2{
+				GroupId:         groupId,
+				ArtifactId:      artifactId,
+				Version:         version,
+				GeneratePom:     &generatePom,
+				Asset1Extension: extension,
+				Asset1:          f,
 			},
 		}
 		require.NoError(t, c.UploadComponents(ctx, hosted, assets))
@@ -273,13 +273,13 @@ func Test_UploadComponents_Maven(t *testing.T) {
 		defer f.Close()
 
 		assets := UploadAssets{
-			maven2: &UploadAssetMaven2{
-				groupId:          groupId,
-				artifactId:       artifactId,
-				version:          version,
-				asset1Extension:  extension,
-				asset1Classifier: classifier,
-				asset1:           f,
+			Maven2: &UploadAssetMaven2{
+				GroupId:          groupId,
+				ArtifactId:       artifactId,
+				Version:          version,
+				Asset1Extension:  extension,
+				Asset1Classifier: classifier,
+				Asset1:           f,
 			},
 		}
 		require.NoError(t, c.UploadComponents(ctx, hosted, assets))
@@ -326,13 +326,13 @@ func Test_UploadComponents_Maven(t *testing.T) {
 		defer f.Close()
 
 		assets := UploadAssets{
-			maven2: &UploadAssetMaven2{
-				groupId:          groupId,
-				artifactId:       artifactId,
-				version:          version,
-				asset1Extension:  extension,
-				asset1Classifier: classifier,
-				asset1:           f,
+			Maven2: &UploadAssetMaven2{
+				GroupId:          groupId,
+				ArtifactId:       artifactId,
+				Version:          version,
+				Asset1Extension:  extension,
+				Asset1Classifier: classifier,
+				Asset1:           f,
 			},
 		}
 		require.NoError(t, c.UploadComponents(ctx, hosted, assets))
@@ -408,19 +408,19 @@ func Test_UploadComponents_Maven(t *testing.T) {
 		generatePom := true
 
 		assets := UploadAssets{
-			maven2: &UploadAssetMaven2{
-				groupId:          groupId,
-				artifactId:       artifactId,
-				version:          version,
-				generatePom:      &generatePom,
-				asset1Extension:  extension,
-				asset1:           fJar,
-				asset2Classifier: classifierSources,
-				asset2Extension:  extension,
-				asset2:           fSources,
-				asset3Classifier: classifierJavadoc,
-				asset3Extension:  extension,
-				asset3:           fJavadoc,
+			Maven2: &UploadAssetMaven2{
+				GroupId:          groupId,
+				ArtifactId:       artifactId,
+				Version:          version,
+				GeneratePom:      &generatePom,
+				Asset1Extension:  extension,
+				Asset1:           fJar,
+				Asset2Classifier: classifierSources,
+				Asset2Extension:  extension,
+				Asset2:           fSources,
+				Asset3Classifier: classifierJavadoc,
+				Asset3Extension:  extension,
+				Asset3:           fJavadoc,
 			},
 		}
 		require.NoError(t, c.UploadComponents(ctx, hosted, assets))
@@ -504,10 +504,10 @@ func Test_UploadComponents_Yum(t *testing.T) {
 	defer asset.Close()
 
 	assets := UploadAssets{
-		yum: &UploadAssetYum{
-			directory:     "/test",
-			asset:         asset,
-			assetFilename: filepath.Base(filePath),
+		Yum: &UploadAssetYum{
+			Directory:     "/test",
+			Asset:         asset,
+			AssetFilename: filepath.Base(filePath),
 		},
 	}
 	require.NoError(t, c.UploadComponents(ctx, hosted, assets))
@@ -516,7 +516,7 @@ func Test_UploadComponents_Yum(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, page)
 	require.Len(t, page.Items, 1)
-	require.Equal(t, filepath.Join(assets.yum.directory, fileName), page.Items[0].Assets[0].Path)
+	require.Equal(t, filepath.Join(assets.Yum.Directory, fileName), page.Items[0].Assets[0].Path)
 
 	err = c.DeleteRepository(ctx, hosted)
 	require.NoError(t, err)

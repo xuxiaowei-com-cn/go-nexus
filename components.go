@@ -72,98 +72,98 @@ func (c *Client) UploadComponents(ctx context.Context, repository string, assets
 	var buf bytes.Buffer
 	w := multipart.NewWriter(&buf)
 
-	maven2 := assets.maven2
+	maven2 := assets.Maven2
 
 	if maven2 != nil {
-		if maven2.groupId == "" || maven2.artifactId == "" || maven2.version == "" {
+		if maven2.GroupId == "" || maven2.ArtifactId == "" || maven2.Version == "" {
 			return fmt.Errorf("groupId, artifactId and version are required")
 		}
 
-		_ = w.WriteField("maven2.groupId", maven2.groupId)
-		_ = w.WriteField("maven2.artifactId", maven2.artifactId)
-		_ = w.WriteField("maven2.version", maven2.version)
+		_ = w.WriteField("maven2.groupId", maven2.GroupId)
+		_ = w.WriteField("maven2.artifactId", maven2.ArtifactId)
+		_ = w.WriteField("maven2.version", maven2.Version)
 
-		if maven2.generatePom != nil {
-			_ = w.WriteField("maven2.generate-pom", strconv.FormatBool(*maven2.generatePom))
+		if maven2.GeneratePom != nil {
+			_ = w.WriteField("maven2.generate-pom", strconv.FormatBool(*maven2.GeneratePom))
 		}
-		if maven2.packaging != "" {
-			_ = w.WriteField("maven2.packaging", maven2.packaging)
-		}
-
-		if maven2.asset1Classifier != "" {
-			_ = w.WriteField("maven2.asset1.classifier", maven2.asset1Classifier)
-		}
-		if maven2.asset1Extension != "" {
-			_ = w.WriteField("maven2.asset1.extension", maven2.asset1Extension)
+		if maven2.Packaging != "" {
+			_ = w.WriteField("maven2.packaging", maven2.Packaging)
 		}
 
-		if maven2.asset2Classifier != "" {
-			_ = w.WriteField("maven2.asset2.classifier", maven2.asset2Classifier)
+		if maven2.Asset1Classifier != "" {
+			_ = w.WriteField("maven2.asset1.classifier", maven2.Asset1Classifier)
 		}
-		if maven2.asset2Extension != "" {
-			_ = w.WriteField("maven2.asset2.extension", maven2.asset2Extension)
-		}
-
-		if maven2.asset3Classifier != "" {
-			_ = w.WriteField("maven2.asset3.classifier", maven2.asset3Classifier)
-		}
-		if maven2.asset3Extension != "" {
-			_ = w.WriteField("maven2.asset3.extension", maven2.asset3Extension)
+		if maven2.Asset1Extension != "" {
+			_ = w.WriteField("maven2.asset1.extension", maven2.Asset1Extension)
 		}
 
-		if maven2.asset1 != nil {
-			fn := maven2.artifactId + "-" + maven2.version + "." + maven2.asset1Extension
+		if maven2.Asset2Classifier != "" {
+			_ = w.WriteField("maven2.asset2.classifier", maven2.Asset2Classifier)
+		}
+		if maven2.Asset2Extension != "" {
+			_ = w.WriteField("maven2.asset2.extension", maven2.Asset2Extension)
+		}
+
+		if maven2.Asset3Classifier != "" {
+			_ = w.WriteField("maven2.asset3.classifier", maven2.Asset3Classifier)
+		}
+		if maven2.Asset3Extension != "" {
+			_ = w.WriteField("maven2.asset3.extension", maven2.Asset3Extension)
+		}
+
+		if maven2.Asset1 != nil {
+			fn := maven2.ArtifactId + "-" + maven2.Version + "." + maven2.Asset1Extension
 			fw, err := w.CreateFormFile("maven2.asset1", fn)
 			if err != nil {
 				return err
 			}
-			if _, err := io.Copy(fw, maven2.asset1); err != nil {
+			if _, err := io.Copy(fw, maven2.Asset1); err != nil {
 				return err
 			}
 		}
 
-		if maven2.asset2 != nil {
-			fn := maven2.artifactId + "-" + maven2.version + "." + maven2.asset2Extension
+		if maven2.Asset2 != nil {
+			fn := maven2.ArtifactId + "-" + maven2.Version + "." + maven2.Asset2Extension
 			fw, err := w.CreateFormFile("maven2.asset2", fn)
 			if err != nil {
 				return err
 			}
-			if _, err := io.Copy(fw, maven2.asset2); err != nil {
+			if _, err := io.Copy(fw, maven2.Asset2); err != nil {
 				return err
 			}
 		}
 
-		if maven2.asset3 != nil {
-			fn := maven2.artifactId + "-" + maven2.version + "." + maven2.asset3Extension
+		if maven2.Asset3 != nil {
+			fn := maven2.ArtifactId + "-" + maven2.Version + "." + maven2.Asset3Extension
 			fw, err := w.CreateFormFile("maven2.asset3", fn)
 			if err != nil {
 				return err
 			}
-			if _, err := io.Copy(fw, maven2.asset3); err != nil {
+			if _, err := io.Copy(fw, maven2.Asset3); err != nil {
 				return err
 			}
 		}
 	}
 
-	yum := assets.yum
+	yum := assets.Yum
 
 	if yum != nil {
-		if yum.assetFilename == "" {
+		if yum.AssetFilename == "" {
 			return fmt.Errorf("assetFilename are required")
 		}
 
-		_ = w.WriteField("yum.asset.filename", yum.assetFilename)
+		_ = w.WriteField("yum.asset.filename", yum.AssetFilename)
 
-		if yum.directory != "" {
-			_ = w.WriteField("yum.directory", yum.directory)
+		if yum.Directory != "" {
+			_ = w.WriteField("yum.directory", yum.Directory)
 		}
 
-		if yum.asset != nil {
-			fw, err := w.CreateFormFile("yum.asset", yum.assetFilename)
+		if yum.Asset != nil {
+			fw, err := w.CreateFormFile("yum.asset", yum.AssetFilename)
 			if err != nil {
 				return err
 			}
-			if _, err := io.Copy(fw, yum.asset); err != nil {
+			if _, err := io.Copy(fw, yum.Asset); err != nil {
 				return err
 			}
 		}
