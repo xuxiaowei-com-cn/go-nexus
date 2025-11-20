@@ -145,6 +145,30 @@ func (c *Client) UploadComponents(ctx context.Context, repository string, assets
 		}
 	}
 
+	yum := assets.yum
+
+	if yum != nil {
+		if yum.assetFilename == "" {
+			return fmt.Errorf("assetFilename are required")
+		}
+
+		_ = w.WriteField("yum.asset.filename", yum.assetFilename)
+
+		if yum.directory != "" {
+			_ = w.WriteField("yum.directory", yum.directory)
+		}
+
+		if yum.asset != nil {
+			fw, err := w.CreateFormFile("yum.asset", yum.assetFilename)
+			if err != nil {
+				return err
+			}
+			if _, err := io.Copy(fw, yum.asset); err != nil {
+				return err
+			}
+		}
+	}
+
 	_ = w.Close()
 
 	headers := map[string]string{

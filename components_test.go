@@ -392,6 +392,7 @@ func Test_UploadComponents_Maven(t *testing.T) {
 		defer os.Remove(filePathJar)
 		defer os.Remove(filePathSources)
 		defer os.Remove(filePathJavadoc)
+
 		fJar, err := os.Open(filePathJar)
 		require.NoError(t, err)
 		defer fJar.Close()
@@ -443,6 +444,79 @@ func Test_UploadComponents_Maven(t *testing.T) {
 		err = c.DeleteComponentByID(ctx, found.ID)
 		require.NoError(t, err)
 	})
+
+	err = c.DeleteRepository(ctx, hosted)
+	require.NoError(t, err)
+}
+
+func Test_UploadComponents_Yum(t *testing.T) {
+	base := os.Getenv("NEXUS_BASE_URL")
+	if base == "" {
+		base = "http://127.0.0.1:48081"
+	}
+	u := os.Getenv("NEXUS_USERNAME")
+	p := os.Getenv("NEXUS_PASSWORD")
+	if u == "" || p == "" {
+		t.Skip("missing NEXUS_USERNAME or NEXUS_PASSWORD")
+	}
+	c := New(base)
+	c.Username = u
+	c.Password = p
+	ctx, cancel := context.WithTimeout(context.Background(), 120*time.Second)
+	defer cancel()
+
+	hosted := fmt.Sprintf(TestRepositoriesNamePrefix+"yum-hosted-%d", time.Now().UnixNano())
+
+	{
+		hreq := YumHostedRepositoryApiRequest{
+			Name:   hosted,
+			Online: true,
+			Storage: HostedStorageAttributes{
+				BlobStoreName:               "default",
+				StrictContentTypeValidation: true,
+				WritePolicy:                 "allow_once",
+			},
+			Yum: YumAttributes{
+				RepodataDepth: 1,
+				DeployPolicy:  "STRICT",
+			},
+		}
+		require.NoError(t, c.CreateYumHostedRepository(ctx, hreq))
+	}
+
+	folder := "./tmp"
+	err := os.MkdirAll(folder, 0o755)
+	require.NoError(t, err)
+
+	fileName := "docker-ce-cli-23.0.0-1.el8.x86_64.rpm"
+	filePath := filepath.Join(folder, fileName)
+
+	{
+		u := "https://mirrors.aliyun.com/docker-ce/linux/centos/8/x86_64/stable/Packages/" + fileName
+		_, _, err := downloadToFile(u, filePath, "", "")
+		require.NoError(t, err)
+	}
+
+	defer os.Remove(filePath)
+
+	asset, err := os.Open(filePath)
+	require.NoError(t, err)
+	defer asset.Close()
+
+	assets := UploadAssets{
+		yum: &UploadAssetYum{
+			directory:     "/test",
+			asset:         asset,
+			assetFilename: filepath.Base(filePath),
+		},
+	}
+	require.NoError(t, c.UploadComponents(ctx, hosted, assets))
+
+	page, err := c.ListComponents(ctx, hosted, "")
+	require.NoError(t, err)
+	require.NotNil(t, page)
+	require.Len(t, page.Items, 1)
+	require.Equal(t, filepath.Join(assets.yum.directory, fileName), page.Items[0].Assets[0].Path)
 
 	err = c.DeleteRepository(ctx, hosted)
 	require.NoError(t, err)

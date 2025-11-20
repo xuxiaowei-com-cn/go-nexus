@@ -1025,7 +1025,14 @@ type PageComponent struct {
 // - swagger.json 同时支持 apt/pypi/raw/npm/nuget/rubygems/helm/docker 等格式的表单字段；
 // - 当前实现聚焦 Maven2（maven2.* 字段），其他格式可按需扩展。
 type UploadAssets struct {
+	yum    *UploadAssetYum
 	maven2 *UploadAssetMaven2
+}
+
+type UploadAssetYum struct {
+	directory     string
+	asset         io.Reader
+	assetFilename string
 }
 
 // UploadAssetMaven2 Maven2 构件上传字段映射（multipart/form-data）
