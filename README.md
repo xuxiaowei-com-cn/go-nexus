@@ -1,5 +1,15 @@
 # Nexus SDK
 
+## 引入
+
+```shell
+go get -u github.com/xuxiaowei-com-cn/go-nexus@main
+```
+
+## 使用
+
+- 使用方式见测试文件
+
 ## 开发命令
 
 ### get
