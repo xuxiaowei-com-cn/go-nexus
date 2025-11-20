@@ -79,15 +79,9 @@ func (c *Client) UploadComponents(ctx context.Context, repository string, assets
 			return fmt.Errorf("groupId, artifactId and version are required")
 		}
 
-		if maven2.groupId != "" {
-			_ = w.WriteField("maven2.groupId", maven2.groupId)
-		}
-		if maven2.artifactId != "" {
-			_ = w.WriteField("maven2.artifactId", maven2.artifactId)
-		}
-		if maven2.version != "" {
-			_ = w.WriteField("maven2.version", maven2.version)
-		}
+		_ = w.WriteField("maven2.groupId", maven2.groupId)
+		_ = w.WriteField("maven2.artifactId", maven2.artifactId)
+		_ = w.WriteField("maven2.version", maven2.version)
 
 		if maven2.generatePom != nil {
 			_ = w.WriteField("maven2.generate-pom", strconv.FormatBool(*maven2.generatePom))
