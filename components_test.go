@@ -449,6 +449,84 @@ func Test_UploadComponents_Maven(t *testing.T) {
 	require.NoError(t, err)
 }
 
+func Test_UploadComponents_Raw(t *testing.T) {
+	base := os.Getenv("NEXUS_BASE_URL")
+	if base == "" {
+		base = "http://127.0.0.1:48081"
+	}
+	u := os.Getenv("NEXUS_USERNAME")
+	p := os.Getenv("NEXUS_PASSWORD")
+	if u == "" || p == "" {
+		t.Skip("missing NEXUS_USERNAME or NEXUS_PASSWORD")
+	}
+	c := New(base)
+	c.Username = u
+	c.Password = p
+	ctx, cancel := context.WithTimeout(context.Background(), 120*time.Second)
+	defer cancel()
+
+	hosted := fmt.Sprintf(TestRepositoriesNamePrefix+"raw-hosted-%d", time.Now().UnixNano())
+
+	{
+		req := RawHostedRepositoryApiRequest{
+			Name:   hosted,
+			Online: true,
+			Storage: HostedStorageAttributes{
+				BlobStoreName:               "default",
+				StrictContentTypeValidation: true,
+				WritePolicy:                 "allow_once",
+			},
+			Raw: RawAttributes{ContentDisposition: "ATTACHMENT"},
+		}
+		require.NoError(t, c.CreateRawHostedRepository(ctx, req))
+	}
+
+	folder := "./tmp"
+	err := os.MkdirAll(folder, 0o755)
+	require.NoError(t, err)
+
+	fileName := "docker-ce-cli-23.0.0-1.el8.x86_64.rpm"
+	filePath := filepath.Join(folder, fileName)
+
+	{
+		u := "https://mirrors.aliyun.com/docker-ce/linux/centos/8/x86_64/stable/Packages/" + fileName
+		_, _, err := downloadToFile(u, filePath, "", "")
+		require.NoError(t, err)
+	}
+
+	defer os.Remove(filePath)
+
+	asset, err := os.Open(filePath)
+	require.NoError(t, err)
+	defer asset.Close()
+
+	assets := UploadAssets{
+		Raw: &UploadAssetRaw{
+			Directory: "/tmp",
+
+			Asset1:         asset,
+			Asset1Filename: "1-" + fileName,
+
+			Asset2:         asset,
+			Asset2Filename: "2-" + fileName,
+
+			Asset3:         asset,
+			Asset3Filename: "3-" + fileName,
+		},
+	}
+	require.NoError(t, c.UploadComponents(ctx, hosted, assets))
+
+	page, err := c.ListComponents(ctx, hosted, "")
+	require.NoError(t, err)
+	require.NotNil(t, page)
+	require.Len(t, page.Items, 3)
+	require.Equal(t, filepath.Join(assets.Raw.Directory, "1-"+fileName), page.Items[0].Assets[0].Path)
+	require.Equal(t, filepath.Join(assets.Raw.Directory, "2-"+fileName), page.Items[1].Assets[0].Path)
+	require.Equal(t, filepath.Join(assets.Raw.Directory, "3-"+fileName), page.Items[2].Assets[0].Path)
+
+	err = c.DeleteRepository(ctx, hosted)
+	require.NoError(t, err)
+}
 func Test_UploadComponents_Yum(t *testing.T) {
 	base := os.Getenv("NEXUS_BASE_URL")
 	if base == "" {

@@ -1025,14 +1025,43 @@ type PageComponent struct {
 // - swagger.json 同时支持 apt/pypi/raw/npm/nuget/rubygems/helm/docker 等格式的表单字段；
 // - 当前实现聚焦 Maven2（maven2.* 字段），其他格式可按需扩展。
 type UploadAssets struct {
-	// Yum 上传（multipart/form-data）字段映射（Swagger: POST /v1/components）
-	// Yum upload (multipart/form-data) field mapping (Swagger: POST /v1/components)
-	// - yum.asset：RPM 包文件体 / asset binary
-	// - yum.asset.filename：RPM 包文件名 / asset filename
-	// - yum.directory：可选，存放子目录 / optional subdirectory
-	Yum *UploadAssetYum
 	// Maven2 上传字段映射，详见 UploadAssetMaven2
 	Maven2 *UploadAssetMaven2
+	// Raw 上传字段映射，详见 UploadAssetRaw
+	Raw *UploadAssetRaw
+	// Yum 上传字段映射，详见 UploadAssetYum
+	Yum *UploadAssetYum
+}
+
+// UploadAssetRaw Raw 构件上传字段映射（multipart/form-data）
+// Raw upload form fields mapping (multipart/form-data)
+//
+// 字段 / Fields：
+// - raw.directory：存放子目录（可选）/ subdirectory (optional)
+// - raw.asset1：文件体（必填）/ asset binary (required)
+// - raw.asset1.filename：文件名（必填）/ asset filename (required)
+// - raw.asset2：文件体（可选）/ asset binary (optional)
+// - raw.asset2.filename：文件名（可选）/ asset filename (optional)
+// - raw.asset3：文件体（可选）/ asset binary (optional)
+// - raw.asset3.filename：文件名（可选）/ asset filename (optional)
+type UploadAssetRaw struct {
+	// 映射 raw.directory
+	Directory string
+
+	// 映射 raw.asset1（文件体）
+	Asset1 io.Reader
+	// 映射 raw.asset1.filename（文件名）
+	Asset1Filename string
+
+	// 映射 raw.asset2（文件体）
+	Asset2 io.Reader
+	// 映射 raw.asset2.filename（文件名）
+	Asset2Filename string
+
+	// 映射 raw.asset3（文件体）
+	Asset3 io.Reader
+	// 映射 raw.asset3.filename（文件名）
+	Asset3Filename string
 }
 
 // UploadAssetYum Yum 构件上传字段映射（multipart/form-data）

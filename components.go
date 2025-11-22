@@ -73,7 +73,6 @@ func (c *Client) UploadComponents(ctx context.Context, repository string, assets
 	w := multipart.NewWriter(&buf)
 
 	maven2 := assets.Maven2
-
 	if maven2 != nil {
 		if maven2.GroupId == "" || maven2.ArtifactId == "" || maven2.Version == "" {
 			return fmt.Errorf("groupId, artifactId and version are required")
@@ -146,7 +145,6 @@ func (c *Client) UploadComponents(ctx context.Context, repository string, assets
 	}
 
 	yum := assets.Yum
-
 	if yum != nil {
 		if yum.AssetFilename == "" {
 			return fmt.Errorf("assetFilename are required")
@@ -164,6 +162,55 @@ func (c *Client) UploadComponents(ctx context.Context, repository string, assets
 				return err
 			}
 			if _, err := io.Copy(fw, yum.Asset); err != nil {
+				return err
+			}
+		}
+	}
+
+	raw := assets.Raw
+	if raw != nil {
+		if raw.Asset1Filename == "" {
+			return fmt.Errorf("asset1Filename are required")
+		}
+
+		_ = w.WriteField("raw.asset1.filename", raw.Asset1Filename)
+
+		if raw.Directory != "" {
+			_ = w.WriteField("raw.directory", raw.Directory)
+		}
+
+		if raw.Asset1 != nil {
+			fw, err := w.CreateFormFile("raw.asset1", raw.Asset1Filename)
+			if err != nil {
+				return err
+			}
+			if _, err := io.Copy(fw, raw.Asset1); err != nil {
+				return err
+			}
+		}
+
+		if raw.Asset2Filename != "" {
+			_ = w.WriteField("raw.asset2.filename", raw.Asset2Filename)
+		}
+		if raw.Asset2 != nil {
+			fw, err := w.CreateFormFile("raw.asset2", raw.Asset2Filename)
+			if err != nil {
+				return err
+			}
+			if _, err := io.Copy(fw, raw.Asset2); err != nil {
+				return err
+			}
+		}
+
+		if raw.Asset3Filename != "" {
+			_ = w.WriteField("raw.asset3.filename", raw.Asset3Filename)
+		}
+		if raw.Asset3 != nil {
+			fw, err := w.CreateFormFile("raw.asset3", raw.Asset3Filename)
+			if err != nil {
+				return err
+			}
+			if _, err := io.Copy(fw, raw.Asset3); err != nil {
 				return err
 			}
 		}
